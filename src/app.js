@@ -1,3 +1,10 @@
 export class App {
-  message = 'Hello World!';
+  constructor() {
+    this.showSettings = false;
+  }  
+
+  toggleSettings() {
+    this.showSettings = !this.showSettings;
+  }
+
 }

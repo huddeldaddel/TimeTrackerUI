@@ -1,4 +1,6 @@
 <template>
+  <require from="./components/settings/settings"></require>
+
   <nav class="navbar is-transparent">
     <div class="navbar-brand">
       <a class="navbar-item" href="https://bulma.io">
@@ -12,7 +14,7 @@
         <div class="navbar-item">
           <div class="field is-grouped">
             <p class="control">
-              <a class="bd-tw-button button">
+              <a class="bd-tw-button button" click.trigger="toggleSettings()">
                 <img src="/static/settings.png" />
               </a>
             </p>            
@@ -22,14 +24,5 @@
     </div>
   </nav>
 
-  <section class="section">
-    <div class="container">
-      <h1 class="title">
-        ${message}
-      </h1>
-      <p class="subtitle">
-        My first website with <strong>Bulma</strong>!
-      </p>
-    </div>
-  </section>
+  <settings if.bind="showSettings"></settings>
 </template>
