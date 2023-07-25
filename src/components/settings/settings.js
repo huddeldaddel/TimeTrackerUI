@@ -1,15 +1,29 @@
+import { Config } from '../../model/config';
+import { ConfigService } from '../../services/config-service';
+import { bindable } from 'aurelia-framework';
+
 export class Settings {
 
+    @bindable updated;
+
     constructor() {
-        this.apiKey = "initial key";
-        this.serverUrl = "https://server.url";
+        let config = ConfigService.loadConfig();
+        this.apiKey = config.apiKey;
+        this.serverUrl = config.serverUrl;
     }
 
     saveSettings() {
-        console.log("save settings");
+        ConfigService.updateConfig(new Config(this.apiKey, this.serverUrl));
+        this.raiseSettingsChangedEvent();
     }
 
     reset() {
         console.log("settings reset");
+    }
+
+    raiseSettingsChangedEvent() {                
+        if(null != this.updated) {
+            this.updated();
+        }
     }
 }
