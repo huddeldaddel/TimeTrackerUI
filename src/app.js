@@ -1,9 +1,8 @@
 export class App {
   
   constructor() {
-    this.showSettings = false;
-    this.settingsChangedHandler = () => this.toggleSettings();
-  }  
+    this.showSettings = false;        
+  } 
 
   toggleSettings() {
     this.showSettings = !this.showSettings;

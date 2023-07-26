@@ -1,29 +1,29 @@
+import { inject } from 'aurelia-framework';
 import { Config } from '../../model/config';
 import { ConfigService } from '../../services/config-service';
-import { bindable } from 'aurelia-framework';
+import { HealthApi } from '../../services/health-api';
 
+@inject(HealthApi)
 export class Settings {
 
-    @bindable updated;
-
-    constructor() {
-        let config = ConfigService.loadConfig();
-        this.apiKey = config.apiKey;
-        this.serverUrl = config.serverUrl;
+    constructor(healthApi) {        
+        this.healthApi = healthApi;
+        this.initialConfig = ConfigService.loadConfig();
+        this.apiKey = this.initialConfig.apiKey;
+        this.serverUrl = this.initialConfig.serverUrl;
     }
 
     saveSettings() {
         ConfigService.updateConfig(new Config(this.apiKey, this.serverUrl));
-        this.raiseSettingsChangedEvent();
+        window.location.reload();
     }
 
     reset() {
-        console.log("settings reset");
-    }
+        this.apiKey = this.initialConfig.apiKey;
+        this.serverUrl = this.initialConfig.serverUrl;
+    }    
 
-    raiseSettingsChangedEvent() {                
-        if(null != this.updated) {
-            this.updated();
-        }
+    testConfiguration() {
+        this.healthApi.testConnection(this.serverUrl, this.apiKey).then(x => console.log(x));
     }
 }
