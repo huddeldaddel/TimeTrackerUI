@@ -6,11 +6,13 @@ import { HealthApi } from '../../services/health-api';
 @inject(HealthApi)
 export class Settings {
 
-    constructor(healthApi) {        
+    constructor(healthApi) {
         this.healthApi = healthApi;
         this.initialConfig = ConfigService.loadConfig();
+        
         this.apiKey = this.initialConfig.apiKey;
         this.serverUrl = this.initialConfig.serverUrl;
+        this.testSuccessful = null;
     }
 
     saveSettings() {
@@ -21,9 +23,15 @@ export class Settings {
     reset() {
         this.apiKey = this.initialConfig.apiKey;
         this.serverUrl = this.initialConfig.serverUrl;
-    }    
+    }
 
-    testConfiguration() {
-        this.healthApi.testConnection(this.serverUrl, this.apiKey).then(x => console.log(x));
+    test() {
+        this.healthApi.testConnection(this.serverUrl)
+            .then(x => this.testSuccessful = x.Status === "healthy")
+            .catch(error => this.testSuccessful = false);
+    }
+
+    closeHint() {
+        this.testSuccessful = null;
     }
 }

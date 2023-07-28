@@ -1,9 +1,7 @@
 <template>
     <section class="section">
         <div class="container">
-            <h1 class="title">
-                Settings ${message}
-            </h1>
+            <h1 class="title">Settings</h1>
 
             <form submit.trigger="saveSettings()">
                 <div class="field">
@@ -23,9 +21,22 @@
                     <p class="help">API key used to secure access to TimeTracker functions</p>
                 </div>
 
+                <div class="notification is-success" if.bind="testSuccessful == true">
+                    <button class="delete" click.trigger="closeHint()"></button>
+                    The connection to ${serverUrl} has been established. Hooray!
+                </div>
+
+                <div class="notification is-danger" if.bind="testSuccessful == false">
+                    <button class="delete" click.trigger="closeHint()"></button>
+                    The connection to ${serverUrl} could not be established. Please check the Server setting.
+                </div>
+
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
                         <button type="submit" class="button is-primary">Save</button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-secondary" click.trigger="test()">Test</button>
                     </div>
                     <div class="control">
                         <button class="button is-link is-light" click.trigger="reset()">Reset</button>

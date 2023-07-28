@@ -8,14 +8,11 @@ export class HealthApi {
         this.http = http;                
     }
 
-    testConnection(serverUrl, apiKey) {
+    testConnection(serverUrl) {
         return this.http.fetch(`${serverUrl}/health`)
                  .then(response => response.json())
                  .then(result => {
                     return result;
-                 })
-                .catch(error => {
-                    console.log('Error retrieving health status');
-                });                
+                 });                
     }
 }
