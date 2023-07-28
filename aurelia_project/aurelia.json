@@ -25,6 +25,6 @@
     "open": false,
     "port": 8080,
     "host": "localhost",
-    "output": "app"
+    "output": "dist"
   }
 }
