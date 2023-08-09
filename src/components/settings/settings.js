@@ -12,6 +12,7 @@ export class Settings {
         
         this.apiKey = this.initialConfig.apiKey;
         this.serverUrl = this.initialConfig.serverUrl;
+        this.testRunning = false;
         this.testSuccessful = null;
     }
 
@@ -26,9 +27,16 @@ export class Settings {
     }
 
     test() {
+        this.testRunning = true;
         this.healthApi.testConnection(this.serverUrl)
-            .then(x => this.testSuccessful = x.Status === "healthy")
-            .catch(error => this.testSuccessful = false);
+            .then(x => {
+                this.testRunning = false;
+                this.testSuccessful = x.Status === "healthy";
+            })
+            .catch(error => {
+                this.testRunning = false;
+                this.testSuccessful = false;
+            });
     }
 
     closeHint() {

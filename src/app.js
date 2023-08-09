@@ -1,11 +1,19 @@
-export class App {
-  
+export class App {  
+
   constructor() {
-    this.showSettings = false;        
+    this.activeTab = 'log';        
   } 
 
-  toggleSettings() {
-    this.showSettings = !this.showSettings;
+  showLog() {
+    this.activeTab = 'log';
+  }
+
+  showStatistics() {
+    this.activeTab = 'statistics';
+  }
+
+  showSettings() {
+    this.activeTab = 'settings';
   }
 
 }

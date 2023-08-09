@@ -1,28 +1,35 @@
 <template>
-  <require from="./components/settings/settings"></require>
+  <require from="./components/editor/editor"></require>
+  <require from="./components/list/list"></require>
+  <require from="./components/settings/settings"></require>  
 
   <nav class="navbar is-transparent">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io">
+      <a class="navbar-item" href="/">
         <img src="/static/punch-clock.png" alt="TimeTracker" width="20" height="20">
         <h1 class="is-size-4">TimeTracker</h1>
       </a>      
     </div>
   
-    <div id="navbarExampleTransparentExample" class="navbar-menu">
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="field is-grouped">
-            <p class="control">
-              <a class="bd-tw-button button" click.trigger="toggleSettings()">
-                <img src="/static/settings.png" />
-              </a>
-            </p>            
-          </div>
-        </div>
+    <div class="navbar-menu">
+      <div class="navbar-start">
+        
+        <a class="navbar-item" click.trigger="showLog()">
+          Log
+        </a>
+
+        <a class="navbar-item" click.trigger="showStatistics()">
+          Statistics
+        </a>
+
+        <a class="navbar-item" click.trigger="showSettings()">
+          Settings
+        </a>        
       </div>
     </div>
   </nav>
 
-  <settings if.bind="showSettings"></settings>
+  <settings if.bind="activeTab == 'settings'"></settings>
+  <list if.bind="activeTab == 'log'"></list>
+  <editor if.bind="activeTab == 'log'"></editor>
 </template>

@@ -4,45 +4,46 @@
             <h1 class="title">Settings</h1>
 
             <form submit.trigger="saveSettings()">
-                <div class="field">
-                    <label class="label">Server</label>
-                    <div class="control">
-                        <input class="input" type="text" placeholder="https://my-timetracker.website.com"
-                            value.bind="serverUrl">
+                <fieldset disabled.bind="testRunning">
+                    <div class="field">
+                        <label class="label">Server</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="https://my-timetracker.website.com"
+                                value.bind="serverUrl">
+                        </div>
+                        <p class="help">URL of the TimeTracker functions app in Azure</p>
                     </div>
-                    <p class="help">URL of the TimeTracker functions app in Azure</p>
-                </div>
 
-                <div class="field">
-                    <label class="label">API Key</label>
-                    <div class="control">
-                        <input class="input" type="text" placeholder="ABC" value.bind="apiKey">
+                    <div class="field">
+                        <label class="label">API Key</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="ABC" value.bind="apiKey">
+                        </div>
+                        <p class="help">API key used to secure access to TimeTracker functions</p>
                     </div>
-                    <p class="help">API key used to secure access to TimeTracker functions</p>
-                </div>
 
-                <div class="notification is-success" if.bind="testSuccessful == true">
-                    <button class="delete" click.trigger="closeHint()"></button>
-                    The connection to ${serverUrl} has been established. Hooray!
-                </div>
-
-                <div class="notification is-danger" if.bind="testSuccessful == false">
-                    <button class="delete" click.trigger="closeHint()"></button>
-                    The connection to ${serverUrl} could not be established. Please check the Server setting.
-                </div>
-
-                <div class="field is-grouped is-grouped-right">
-                    <div class="control">
-                        <button type="submit" class="button is-primary">Save</button>
+                    <div class="notification is-success" if.bind="testSuccessful == true">
+                        <button class="delete" click.trigger="closeHint()"></button>
+                        The connection to ${serverUrl} has been established. Hooray!
                     </div>
-                    <div class="control">
-                        <button class="button is-secondary" click.trigger="test()">Test</button>
-                    </div>
-                    <div class="control">
-                        <button class="button is-link is-light" click.trigger="reset()">Reset</button>
-                    </div>
-                </div>
 
+                    <div class="notification is-danger" if.bind="testSuccessful == false">
+                        <button class="delete" click.trigger="closeHint()"></button>
+                        The connection to ${serverUrl} could not be established. Please check the Server setting.
+                    </div>
+
+                    <div class="field is-grouped is-grouped-right">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Save</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-secondary" click.trigger="test()">Test</button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link is-light" click.trigger="reset()">Reset</button>
+                        </div>
+                    </div>
+                </fieldset>
             </form>
         </div>
     </section>
