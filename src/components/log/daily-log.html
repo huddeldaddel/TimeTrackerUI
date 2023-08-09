@@ -19,19 +19,22 @@
                         <th>Duration</th>
                         <th>Project</th>
                         <th>Description</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>Begin</th>
-                        <th>End</th>
-                        <th>Duration</th>
-                        <th>Project</th>
-                        <th>Description</th>
+                        <th>TODO</th>
+                        <th>TODO</th>
+                        <th>TODO</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </tfoot>
                 <tbody>
                     <tr as-element="log-entry" repeat.for="entry of entries" entry.bind="entry"></tr>
+                    <tr as-element="log-entry"></tr>
                 </tbody>
             </table>
         </a>

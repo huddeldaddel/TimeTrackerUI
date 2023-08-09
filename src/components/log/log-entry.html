@@ -1,7 +1,28 @@
-<template>
-    <td>${entry.Start}</td>
-    <td>${entry.End}</td>
-    <td>${entry.Duration}</td>
-    <td>${entry.Project}</td>
-    <td>${entry.Description}</td>
+<template click.trigger="toggleMode()">
+    <require from="./log-entry.css"></require>
+    
+    <td>
+        <span if.bind="!editMode">${entry.Start}</span>
+        <input type="time" if.bind="editMode" value.two-way="start">
+    </td>
+    <td>
+        <span if.bind="!editMode">${entry.End}</span>
+        <input type="time" if.bind="editMode" value.two-way="end">
+    </td>
+    <td>
+        <span if.bind="!editMode">${entry.Duration}</span>
+        <span if.bind="editMode">${duration}</span>
+    </td>
+    <td>
+        <span if.bind="!editMode">${entry.Project}</span>
+        <input class="log-entry-text" type="text" value.two-way="project" if.bind="editMode">
+    </td>
+    <td>
+        <span if.bind="!editMode">${entry.Description}</span>
+        <input class="log-entry-text" type="text" value.two-way="description" if.bind="editMode">
+    </td>
+    <td>
+        actions
+    </td>        
+
 </template>
