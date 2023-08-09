@@ -9,7 +9,6 @@ export class Settings {
     constructor(healthApi) {
         this.healthApi = healthApi;
         this.initialConfig = ConfigService.loadConfig();
-        
         this.apiKey = this.initialConfig.apiKey;
         this.serverUrl = this.initialConfig.serverUrl;
         this.testRunning = false;

@@ -1,17 +1,22 @@
-import { bindable } from 'aurelia-framework';
+import { bindable, inject } from 'aurelia-framework';
+import { LogEntryApi } from '../../services/log-entry-api';
 
+@inject(LogEntryApi)
 export class DailyLog {
 
     @bindable date;
 
-    constructor() {
+    constructor(logEntryApi) {
+        this.logEntryApi = logEntryApi;
         this.collapsed = true;
+        this.entries = [];
         this.header = "";
     }
 
     attached() {        
         this.header = this.formatDate(this.date);        
-        this.collapsed = this.header !== this.formatDate(new Date());
+        this.collapsed = this.header !== this.formatDate(new Date());        
+        this.loadEntries();
     }
 
     formatDate(date = new Date()) {
@@ -23,6 +28,23 @@ export class DailyLog {
 
     toggleCollapsed() {
         this.collapsed = !this.collapsed;
+        this.loadEntries();
+    }
+
+    loadEntries() {
+        if(!this.collapsed && this.entries.length === 0) {
+            console.debug('loading entries');
+            this.logEntryApi.getLogEntries(this.formatDate(this.date))
+            .then(x => {
+                console.debug(x);
+                this.entries = x;
+
+            })
+            .catch(error => {          
+                console.error(error);
+                this.entries = [];
+            });
+        }
     }
 
 }
