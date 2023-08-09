@@ -1,13 +1,11 @@
 <template click.trigger="toggleMode()">
-    <require from="./log-entry.css"></require>
-    
     <td>
         <span if.bind="!editMode">${entry.Start}</span>
-        <input type="time" if.bind="editMode" value.two-way="start">
+        <input class="input" type="time" if.bind="editMode" value.two-way="start">
     </td>
     <td>
         <span if.bind="!editMode">${entry.End}</span>
-        <input type="time" if.bind="editMode" value.two-way="end">
+        <input class="input" type="time" if.bind="editMode" value.two-way="end">
     </td>
     <td>
         <span if.bind="!editMode">${entry.Duration}</span>
@@ -15,14 +13,24 @@
     </td>
     <td>
         <span if.bind="!editMode">${entry.Project}</span>
-        <input class="log-entry-text" type="text" value.two-way="project" if.bind="editMode">
+        <input class="input" style="box-sizing: border-box; width: 100%;" type="text" value.two-way="project"
+            if.bind="editMode">
     </td>
     <td>
         <span if.bind="!editMode">${entry.Description}</span>
-        <input class="log-entry-text" type="text" value.two-way="description" if.bind="editMode">
+        <input class="input" style="box-sizing: border-box; width: 100%;" type="text" value.two-way="description"
+            if.bind="editMode">
     </td>
     <td>
-        actions
-    </td>        
-
+        <button class="button" if.bind="editMode">
+            <span class="icon">
+                <img src="/static/content-save.svg" click.trigger="save()">
+            </span>
+        </button>
+        <button class="button" if.bind="editMode">
+            <span class="icon">
+                <img src="/static/cancel.svg" click.trigger="reset()">
+            </span>
+        </button>
+    </td>
 </template>
