@@ -1,3 +1,14 @@
 <template>
-    ${header}
+    <nav class="panel">
+        <p class="panel-heading">            
+            <span class="icon">
+                <img src="/static/minus.svg" if.bind="!collapsed" click.trigger="toggleCollapsed()">
+                <img src="/static/plus.svg" if.bind="collapsed" click.trigger="toggleCollapsed()">
+              </span>
+            ${header}            
+        </p>
+        <a class="panel-block" if.bind="!collapsed">
+            marksheet
+        </a>
+    </nav>
 </template>

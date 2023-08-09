@@ -1,5 +1,9 @@
 <template>
     <require from="../daily-log/daily-log"></require>    
 
-    <daily-log repeat.for="day of days" date.bind="day"></daily-log>       
+    <section class="section">
+        <div class="container">
+            <daily-log repeat.for="day of days" date.bind="day"></daily-log>       
+        </div>
+    </section>
 </template>
