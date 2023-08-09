@@ -14,15 +14,15 @@
     <div class="navbar-menu">
       <div class="navbar-start">
         
-        <a class="navbar-item" click.trigger="showLog()">
+        <a class="navbar-item ${activeTab == 'log' ? 'is-active' : ''}" click.trigger="showLog()">
           Log
         </a>
 
-        <a class="navbar-item" click.trigger="showStatistics()">
+        <a class="navbar-item ${activeTab == 'statistics' ? 'is-active' : ''}" click.trigger="showStatistics()">
           Statistics
         </a>
 
-        <a class="navbar-item" click.trigger="showSettings()">
+        <a class="navbar-item ${activeTab == 'settings' ? 'is-active' : ''}" click.trigger="showSettings()">
           Settings
         </a>        
       </div>
