@@ -1,0 +1,44 @@
+<template>
+    <require from="./daily-log.css"></require>
+
+    <nav class="panel">
+        <p class="panel-heading">
+            <span class="icon">
+                <img src="/static/minus.svg" if.bind="!collapsed" click.trigger="toggleCollapsed()">
+                <img src="/static/plus.svg" if.bind="collapsed" click.trigger="toggleCollapsed()">
+            </span>
+            ${header}
+        </p>
+        <a class="panel-block" if.bind="!collapsed">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Begin</th>
+                        <th>End</th>
+                        <th>Duration</th>
+                        <th>Project</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Begin</th>
+                        <th>End</th>
+                        <th>Duration</th>
+                        <th>Project</th>
+                        <th>Description</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <tr>
+                        <td>09:00</td>
+                        <td>11:45</td>
+                        <td>2:45</td>
+                        <td>Lernen</td>
+                        <td>Learned Azure Functions</td>                        
+                    </tr>                    
+                </tbody>
+            </table>
+        </a>
+    </nav>
+</template>

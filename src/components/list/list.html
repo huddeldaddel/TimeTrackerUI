@@ -1,3 +1,0 @@
-<template>
-    List
-</template>

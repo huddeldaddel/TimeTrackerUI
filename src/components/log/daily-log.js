@@ -33,7 +33,6 @@ export class DailyLog {
 
     loadEntries() {
         if(!this.collapsed && this.entries.length === 0) {
-            console.debug('loading entries');
             this.logEntryApi.getLogEntries(this.formatDate(this.date))
             .then(x => this.entries = x)
             .catch(error => {          
