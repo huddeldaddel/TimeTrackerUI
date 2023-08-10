@@ -3,7 +3,7 @@ import { inject } from 'aurelia-framework';
 import { ConfigService } from './config-service';
 
 @inject(HttpClient)
-export class LogEntryApi {
+export class StatisticsApi {
 
     constructor(http) {
         this.http = http;        
@@ -19,8 +19,8 @@ export class LogEntryApi {
         });
     }
 
-    getLogEntries(date) {        
-        return this.http.fetch(`/logEntries/${date}`)
+    getStatistics(year) {        
+        return this.http.fetch(`/statistics/${year}`)
                  .then(response => response.json())
                  .then(result => {
                     return result;

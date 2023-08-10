@@ -14,7 +14,10 @@
     <td>
         <span if.bind="!editMode">${entry.Project}</span>
         <input class="input" style="box-sizing: border-box; width: 100%;" type="text" value.two-way="project"
-            if.bind="editMode">
+            list="suggestedProjects" if.bind="editMode">
+        <datalist id="suggestedProjects" if.bind="editMode">
+            <option repeat.for="project of projectSuggestions" value.bind="project"></option>            
+        </datalist>
     </td>
     <td>
         <span if.bind="!editMode">${entry.Description}</span>
