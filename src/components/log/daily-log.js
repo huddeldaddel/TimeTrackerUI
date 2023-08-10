@@ -13,9 +13,9 @@ export class DailyLog {
         this.header = "";
     }
 
-    attached() {        
-        this.header = this.formatDate(this.date);        
-        this.collapsed = this.header !== this.formatDate(new Date());        
+    attached() {
+        this.header = this.formatDate(this.date);
+        this.collapsed = this.header !== this.formatDate(new Date());
         this.loadEntries();
     }
 
@@ -32,14 +32,28 @@ export class DailyLog {
     }
 
     loadEntries() {
-        if(!this.collapsed && this.entries.length === 0) {
+        if (!this.collapsed && this.entries.length === 0) {
             this.logEntryApi.getLogEntries(this.formatDate(this.date))
-            .then(x => this.entries = x)
-            .catch(error => {          
-                console.error(error);
-                this.entries = [];
-            });
+                .then(x => {
+                    this.entries = x;
+                    this.sortEntries();
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.entries = [];
+                });
         }
+    }
+
+    handleAdd(newEntry) {
+        this.entries.push(newEntry);
+        this.sortEntries();
+    }
+
+    sortEntries() {
+        this.entries.sort((a, b) => {
+            return `${a.Date} ${a.Start}`.localeCompare(`${b.Date} ${b.Start}`);
+        });
     }
 
 }

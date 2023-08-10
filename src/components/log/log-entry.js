@@ -10,6 +10,7 @@ export class LogEntry {
     editMode = false;
     @bindable date;
     @bindable entry;
+    @bindable onadd;
 
     @observable start = "";
     @observable end = "";
@@ -43,6 +44,14 @@ export class LogEntry {
     save(event) {
         event.stopPropagation();
 
+        if (!this.entry) {
+            this.createNewRecord();
+        } else {
+            this.updateExistingRecord();
+        }
+    }
+
+    createNewRecord() {
         let leModel = new LogEntryModel();
         leModel.Date = this.date;
         leModel.Description = this.description;
@@ -52,7 +61,22 @@ export class LogEntry {
         leModel.Start = this.start;
 
         this.logEntryApi.addLogEntry(leModel)
-            .then(x => console.log(x))
+            .then(newEntry => {
+                if (!this.entry && this.onadd) {
+                    this.entry = newEntry;
+                    this.onadd(newEntry);
+                }
+            })
+            .catch(error => console.error("Adding a log entry failed", error));
+    }
+
+    updateExistingRecord() {
+        this.entry.Start = this.start;
+        this.entry.End = this.end;
+        this.entry.Project = this.project;
+        this.entry.Description = this.description;
+        this.logEntryApi.updateLogEntry(this.entry)
+            .then(x => this.editMode = false)
             .catch(error => console.error("Adding a log entry failed", error));
     }
 
@@ -76,7 +100,6 @@ export class LogEntry {
     }
 
     toggleMode() {
-        console.debug("toggling mode");
         this.editMode = true;
     }
 

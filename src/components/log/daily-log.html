@@ -34,7 +34,7 @@
                 </tfoot>
                 <tbody>
                     <tr as-element="log-entry" repeat.for="entry of entries" date.bind="header" entry.bind="entry"></tr>
-                    <tr as-element="log-entry" date.bind="header"></tr>
+                    <tr as-element="log-entry" date.bind="header" onadd.bind="handleAdd.bind($this)"></tr>
                 </tbody>
             </table>
         </a>

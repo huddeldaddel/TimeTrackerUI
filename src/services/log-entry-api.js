@@ -38,4 +38,15 @@ export class LogEntryApi {
             });
     }
 
+    updateLogEntry(entry) {
+        return this.http.fetch(`/logEntries`, {
+            method: 'put',
+            body: json(entry)
+        })
+            .then(response => response.json())
+            .then(result => {
+                return result;
+            });
+    }
+
 }
