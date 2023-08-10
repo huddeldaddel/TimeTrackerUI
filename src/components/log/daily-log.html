@@ -1,4 +1,5 @@
 <template>
+    <require from="../spinner.html"></require>
     <require from="./daily-log.css"></require>
     <require from="./log-entry"></require>
 
@@ -35,9 +36,14 @@
                 <tbody>
                     <tr as-element="log-entry" repeat.for="entry of entries" date.bind="header" entry.bind="entry"
                         ondelete.bind="deleteHook"></tr>
-                    <tr as-element="log-entry" date.bind="header" onadd.bind="addHook"></tr>
+                    <tr as-element="log-entry" date.bind="header" onadd.bind="addHook" if.bind="!loading && (null == error)"></tr>
                     <tr if.bind="error != null">
                         <td colspan="6" class="has-background-danger">${error}</td>
+                    </tr>
+                    <tr if.bind="loading">
+                        <td colspan="6" class="has-background-light">
+                            <spinner></spinner>
+                        </td>
                     </tr>
                 </tbody>
             </table>

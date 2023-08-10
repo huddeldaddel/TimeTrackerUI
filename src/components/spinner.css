@@ -1,0 +1,11 @@
+div.spinner {
+    animation: spinAround .5s infinite linear;
+    border: 2px solid black;
+    border-radius: 9999px;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    display: block;
+    height: 1em;
+    width: 1em;
+    position: relative;
+}

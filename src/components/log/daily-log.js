@@ -11,6 +11,7 @@ export class DailyLog {
         this.collapsed = true;
         this.entries = [];
         this.error = null;
+        this.loading = false;
         this.header = "";
 
         this.addHook = this.handleAdd.bind(this);
@@ -37,15 +38,18 @@ export class DailyLog {
 
     loadEntries() {
         if (!this.collapsed && this.entries.length === 0) {
+            this.loading = true;
             this.logEntryApi.getLogEntries(this.formatDate(this.date))
                 .then(x => {
                     this.entries = x;
                     this.sortEntries();
                     this.error = null;
+                    this.loading = false;
                 })
                 .catch(error => {
-                    this.error = error;                    
+                    this.error = error;
                     this.entries = [];
+                    this.loading = false;
                 });
         }
     }
