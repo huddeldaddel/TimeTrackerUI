@@ -17,7 +17,7 @@
                     <div class="field">
                         <label class="label">API Key</label>
                         <div class="control">
-                            <input class="input" type="text" placeholder="ABC" value.bind="apiKey">
+                            <input class="input" type="password" value.bind="apiKey">
                         </div>
                         <p class="help">API key used to secure access to TimeTracker functions</p>
                     </div>
@@ -37,7 +37,7 @@
                             <button type="submit" class="button is-primary">Save</button>
                         </div>
                         <div class="control">
-                            <button class="button is-secondary" click.trigger="test()">Test</button>
+                            <button class="button is-secondary ${testRunning ? 'is-loading' : ''}" click.trigger="test()">Test</button>
                         </div>
                         <div class="control">
                             <button class="button is-link is-light" click.trigger="reset()">Reset</button>
