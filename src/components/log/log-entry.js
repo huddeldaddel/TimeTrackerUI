@@ -9,8 +9,9 @@ export class LogEntry {
 
     editMode = false;
     @bindable date;
-    @bindable entry;
+    @bindable @observable entry;
     @bindable onadd;
+    @bindable ondelete;
 
     @observable start = "";
     @observable end = "";
@@ -62,8 +63,8 @@ export class LogEntry {
 
         this.logEntryApi.addLogEntry(leModel)
             .then(newEntry => {
-                if (!this.entry && this.onadd) {
-                    this.entry = newEntry;
+                if (!this.entry && this.onadd) {                    
+                    this.reset(null);
                     this.onadd(newEntry);
                 }
             })
@@ -77,11 +78,13 @@ export class LogEntry {
         this.entry.Description = this.description;
         this.logEntryApi.updateLogEntry(this.entry)
             .then(x => this.editMode = false)
-            .catch(error => console.error("Adding a log entry failed", error));
+            .catch(error => console.error("Updating a log entry failed", error));
     }
 
     reset(event) {
-        event.stopPropagation();
+        if(!!event) {
+            event.stopPropagation();
+        }        
 
         if (!this.entry) {
             this.start = "";
@@ -99,7 +102,20 @@ export class LogEntry {
         }
     }
 
+    delete(event) {        
+        event.stopPropagation();
+
+        this.logEntryApi.deleteLogEntry(this.entry)
+            .then(() => {
+                if (this.entry && this.ondelete) {                    
+                    this.ondelete(this.entry);
+                }
+            })
+            .catch(error => console.error("Deleting a log entry failed", error));
+    }
+
     toggleMode() {
+        console.log("toggleMode");
         this.editMode = true;
     }
 
@@ -120,6 +136,10 @@ export class LogEntry {
         let hours = Math.floor(total / 60);
         let minutes = total % 60;
         return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+    }
+
+    entryChanged(newValue, oldValue) {
+        console.debug("entryChanged", oldValue, newValue);
     }
 
 }

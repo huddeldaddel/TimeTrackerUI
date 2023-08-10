@@ -1,25 +1,25 @@
-<template click.trigger="toggleMode()">
-    <td>
+<template>
+    <td click.trigger="toggleMode()">
         <span if.bind="!editMode">${start}</span>
         <input class="input" type="time" if.bind="editMode" value.two-way="start">
     </td>
-    <td>
+    <td click.trigger="toggleMode()">
         <span if.bind="!editMode">${end}</span>
         <input class="input" type="time" if.bind="editMode" value.two-way="end">
     </td>
-    <td>
+    <td click.trigger="toggleMode()">
         <span if.bind="!editMode">${duration}</span>
         <div style="margin-top: 7px;" if.bind="editMode">${duration}</div>
     </td>
-    <td>
+    <td click.trigger="toggleMode()">
         <span if.bind="!editMode">${project}</span>
         <input class="input" style="box-sizing: border-box; width: 100%;" type="text" value.two-way="project"
             list="suggestedProjects" if.bind="editMode">
         <datalist id="suggestedProjects" if.bind="editMode">
-            <option repeat.for="project of projectSuggestions" value.bind="project"></option>            
+            <option repeat.for="project of projectSuggestions" value.bind="project"></option>
         </datalist>
     </td>
-    <td>
+    <td click.trigger="toggleMode()">
         <span if.bind="!editMode">${description}</span>
         <input class="input" style="box-sizing: border-box; width: 100%;" type="text" value.two-way="description"
             if.bind="editMode">
@@ -33,6 +33,11 @@
         <button class="button" if.bind="editMode" click.delegate="reset($event)">
             <span class="icon">
                 <img src="/static/cancel.svg">
+            </span>
+        </button>
+        <button class="button" if.bind="!editMode" click.delegate="delete($event)">
+            <span class="icon">
+                <img src="/static/delete.svg">
             </span>
         </button>
     </td>

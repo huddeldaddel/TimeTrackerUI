@@ -30,6 +30,12 @@ export class LogEntryApi {
             });
     }
 
+    deleteLogEntry(entry) {
+        return this.http.fetch(`/logEntries/${entry.Id}`, {
+            method: 'delete'
+        });
+    }
+
     getLogEntries(date) {
         return this.http.fetch(`/logEntries/${date}`)
             .then(response => response.json())

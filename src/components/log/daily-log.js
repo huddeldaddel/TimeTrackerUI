@@ -11,6 +11,9 @@ export class DailyLog {
         this.collapsed = true;
         this.entries = [];
         this.header = "";
+
+        this.addHook = this.handleAdd.bind(this);
+        this.deleteHook = this.handleDelete.bind(this);
     }
 
     attached() {
@@ -46,7 +49,12 @@ export class DailyLog {
     }
 
     handleAdd(newEntry) {
-        this.entries.push(newEntry);
+        this.entries = this.entries.concat([newEntry]);
+        this.sortEntries();
+    }
+
+    handleDelete(deletedEntry) {
+        this.entries = this.entries.filter((entry) => entry.Id !== deletedEntry.Id);
         this.sortEntries();
     }
 
