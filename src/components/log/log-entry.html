@@ -1,18 +1,18 @@
 <template click.trigger="toggleMode()">
     <td>
-        <span if.bind="!editMode">${entry.Start}</span>
+        <span if.bind="!editMode">${start}</span>
         <input class="input" type="time" if.bind="editMode" value.two-way="start">
     </td>
     <td>
-        <span if.bind="!editMode">${entry.End}</span>
+        <span if.bind="!editMode">${end}</span>
         <input class="input" type="time" if.bind="editMode" value.two-way="end">
     </td>
     <td>
-        <span if.bind="!editMode">${entry.Duration}</span>
+        <span if.bind="!editMode">${duration}</span>
         <div style="margin-top: 7px;" if.bind="editMode">${duration}</div>
     </td>
     <td>
-        <span if.bind="!editMode">${entry.Project}</span>
+        <span if.bind="!editMode">${project}</span>
         <input class="input" style="box-sizing: border-box; width: 100%;" type="text" value.two-way="project"
             list="suggestedProjects" if.bind="editMode">
         <datalist id="suggestedProjects" if.bind="editMode">
@@ -20,19 +20,19 @@
         </datalist>
     </td>
     <td>
-        <span if.bind="!editMode">${entry.Description}</span>
+        <span if.bind="!editMode">${description}</span>
         <input class="input" style="box-sizing: border-box; width: 100%;" type="text" value.two-way="description"
             if.bind="editMode">
     </td>
     <td>
-        <button class="button" if.bind="editMode">
+        <button class="button" if.bind="editMode" click.delegate="save($event)">
             <span class="icon">
-                <img src="/static/content-save.svg" click.trigger="save()">
+                <img src="/static/content-save.svg">
             </span>
         </button>
-        <button class="button" if.bind="editMode">
+        <button class="button" if.bind="editMode" click.delegate="reset($event)">
             <span class="icon">
-                <img src="/static/cancel.svg" click.trigger="reset()">
+                <img src="/static/cancel.svg">
             </span>
         </button>
     </td>

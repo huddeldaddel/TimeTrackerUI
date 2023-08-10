@@ -1,5 +1,6 @@
 import { bindable, inject, observable } from 'aurelia-framework';
 import { Duration } from '../../model/duration';
+import { LogEntry as LogEntryModel } from '../../model/log-entry';
 import { LogEntryApi } from '../../services/log-entry-api';
 import { StatisticsService } from '../../services/statistics-service';
 
@@ -7,6 +8,7 @@ import { StatisticsService } from '../../services/statistics-service';
 export class LogEntry {
 
     editMode = false;
+    @bindable date;
     @bindable entry;
 
     @observable start = "";
@@ -32,17 +34,31 @@ export class LogEntry {
         } else {
             this.start = this.entry.Start;
             this.end = this.entry.End;
-            this.duration = this.entry.Duration;
+            this.duration = this.formatDurationMinutes(this.entry.Duration);
             this.project = this.entry.Project;
             this.description = this.entry.Description;
         }
     }
 
-    save() {
+    save(event) {
+        event.stopPropagation();
 
+        let leModel = new LogEntryModel();
+        leModel.Date = this.date;
+        leModel.Description = this.description;
+        leModel.End = this.end;
+        leModel.Id = !!this.entry ? this.entry.Id : null;
+        leModel.Project = this.project;
+        leModel.Start = this.start;
+
+        this.logEntryApi.addLogEntry(leModel)
+            .then(x => console.log(x))
+            .catch(error => console.error("Adding a log entry failed", error));
     }
 
-    reset() {
+    reset(event) {
+        event.stopPropagation();
+
         if (!this.entry) {
             this.start = "";
             this.end = "";
@@ -52,13 +68,15 @@ export class LogEntry {
         } else {
             this.start = this.entry.Start;
             this.end = this.entry.End;
-            this.duration = this.entry.Duration;
+            this.duration = this.formatDurationMinutes(this.entry.Duration);
             this.project = this.entry.Project;
             this.description = this.entry.Description;
+            this.editMode = false;
         }
     }
 
     toggleMode() {
+        console.debug("toggling mode");
         this.editMode = true;
     }
 
@@ -73,6 +91,12 @@ export class LogEntry {
     calculateDuration() {
         let duration = new Duration(this.start, this.end);
         this.duration = duration.getDurationAsString();
+    }
+
+    formatDurationMinutes(total) {
+        let hours = Math.floor(total / 60);
+        let minutes = total % 60;
+        return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`
     }
 
 }
