@@ -24,6 +24,9 @@ export class StatisticsApi {
                  .then(response => response.json())
                  .then(result => {
                     return result;
+                 })
+                 .catch(error => {
+                    console.error(`Failed to load statistics for ${year}`, error);
                  });                
     }
     

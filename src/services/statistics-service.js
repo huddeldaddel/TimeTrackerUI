@@ -19,6 +19,11 @@ export class StatisticsService {
     async getRecentProjects() {
         let statistics = await this.getCurrentStatistics();
         let result = [];
+
+        if(!statistics) {
+            return result;
+        }
+
         let obj = statistics.Year.Projects;
         for (var key in obj) {
             if (obj.hasOwnProperty(key)) {

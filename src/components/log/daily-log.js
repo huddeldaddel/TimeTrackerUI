@@ -10,6 +10,7 @@ export class DailyLog {
         this.logEntryApi = logEntryApi;
         this.collapsed = true;
         this.entries = [];
+        this.error = null;
         this.header = "";
 
         this.addHook = this.handleAdd.bind(this);
@@ -40,9 +41,10 @@ export class DailyLog {
                 .then(x => {
                     this.entries = x;
                     this.sortEntries();
+                    this.error = null;
                 })
                 .catch(error => {
-                    console.error(error);
+                    this.error = error;                    
                     this.entries = [];
                 });
         }

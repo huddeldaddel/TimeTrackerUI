@@ -36,6 +36,9 @@
                     <tr as-element="log-entry" repeat.for="entry of entries" date.bind="header" entry.bind="entry"
                         ondelete.bind="deleteHook"></tr>
                     <tr as-element="log-entry" date.bind="header" onadd.bind="addHook"></tr>
+                    <tr if.bind="error != null">
+                        <td colspan="6" class="has-background-danger">${error}</td>
+                    </tr>
                 </tbody>
             </table>
         </a>
