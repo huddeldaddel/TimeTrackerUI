@@ -9,7 +9,7 @@ export class LogEntry {
 
     editMode = false;
     @bindable date;
-    @bindable @observable entry;
+    @bindable entry;
     @bindable onadd;
     @bindable ondelete;
 
@@ -136,10 +136,6 @@ export class LogEntry {
         let hours = Math.floor(total / 60);
         let minutes = total % 60;
         return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`
-    }
-
-    entryChanged(newValue, oldValue) {
-        console.debug("entryChanged", oldValue, newValue);
     }
 
 }
