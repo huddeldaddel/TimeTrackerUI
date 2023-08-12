@@ -1,10 +1,14 @@
 import { bindable, inject } from 'aurelia-framework';
 import { LogEntryApi } from '../../services/log-entry-api';
+import { Duration } from '../../model/duration';
 
 @inject(LogEntryApi)
 export class DailyLog {
 
     @bindable date;
+    dayStartedAt = "";
+    dayEndedAt = "";
+    totalWorkingHours = "";
 
     constructor(logEntryApi) {
         this.logEntryApi = logEntryApi;
@@ -16,6 +20,7 @@ export class DailyLog {
 
         this.addHook = this.handleAdd.bind(this);
         this.deleteHook = this.handleDelete.bind(this);
+        this.updateHook = this.handleUpdate.bind(this);
     }
 
     attached() {
@@ -64,10 +69,25 @@ export class DailyLog {
         this.sortEntries();
     }
 
+    handleUpdate(updatedEntry) {
+        this.entries = this.entries.filter((entry) => entry.Id !== deletedEntry.Id).concat([updatedEntry]);
+        this.sortEntries();
+    }
+
     sortEntries() {
         this.entries.sort((a, b) => {
             return `${a.Date} ${a.Start}`.localeCompare(`${b.Date} ${b.Start}`);
         });
+
+        if(0 < this.entries.length) {
+            this.dayStartedAt = this.entries[0].Start;
+            this.dayEndedAt = this.entries[this.entries.length -1].End;
+            this.totalWorkingHours = Duration.formatDurationMinutes(this.entries.map(e => e.Duration).reduce((a, b) => a + b, 0));
+        } else {
+            this.dayStartedAt = "";
+            this.dayEndedAt = "";
+            this.totalWorkingHours = "";
+        }
     }
 
 }

@@ -12,6 +12,7 @@ export class LogEntry {
     @bindable entry;
     @bindable onadd;
     @bindable ondelete;
+    @bindable onupdate;
 
     @observable start = "";
     @observable end = "";
@@ -36,7 +37,7 @@ export class LogEntry {
         } else {
             this.start = this.entry.Start;
             this.end = this.entry.End;
-            this.duration = this.formatDurationMinutes(this.entry.Duration);
+            this.duration = Duration.formatDurationMinutes(this.entry.Duration);
             this.project = this.entry.Project;
             this.description = this.entry.Description;
         }
@@ -77,7 +78,12 @@ export class LogEntry {
         this.entry.Project = this.project;
         this.entry.Description = this.description;
         this.logEntryApi.updateLogEntry(this.entry)
-            .then(x => this.editMode = false)
+            .then(x => { 
+                this.editMode = false;
+                if(this.onupdate) {
+                    this.onupdate(this.entry);
+                }
+            })
             .catch(error => console.error("Updating a log entry failed", error));
     }
 
@@ -130,12 +136,6 @@ export class LogEntry {
     calculateDuration() {
         let duration = new Duration(this.start, this.end);
         this.duration = duration.getDurationAsString();
-    }
-
-    formatDurationMinutes(total) {
-        let hours = Math.floor(total / 60);
-        let minutes = total % 60;
-        return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`
     }
 
 }

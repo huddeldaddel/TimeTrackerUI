@@ -41,4 +41,10 @@ export class Duration {
         return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`
     }        
     
+    static formatDurationMinutes(total) {
+        let hours = Math.floor(total / 60);
+        let minutes = total % 60;
+        return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`
+    }
+
 }

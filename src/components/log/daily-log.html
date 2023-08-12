@@ -25,9 +25,9 @@
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>TODO</th>
-                        <th>TODO</th>
-                        <th>TODO</th>
+                        <th>${dayStartedAt}</th>
+                        <th>${dayEndedAt}</th>
+                        <th>${totalWorkingHours}</th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -35,7 +35,7 @@
                 </tfoot>
                 <tbody>
                     <tr as-element="log-entry" repeat.for="entry of entries" date.bind="header" entry.bind="entry"
-                        ondelete.bind="deleteHook"></tr>
+                        ondelete.bind="deleteHook" onupdate.bind="updateHook"></tr>
                     <tr as-element="log-entry" date.bind="header" onadd.bind="addHook" if.bind="!loading && (null == error)"></tr>
                     <tr if.bind="error != null">
                         <td colspan="6" class="has-background-danger">${error}</td>
