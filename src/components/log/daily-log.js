@@ -1,6 +1,6 @@
 import { bindable, inject } from 'aurelia-framework';
-import { LogEntryApi } from '../../services/log-entry-api';
 import { Duration } from '../../model/duration';
+import { LogEntryApi } from '../../services/log-entry-api';
 
 @inject(LogEntryApi)
 export class DailyLog {
@@ -9,6 +9,7 @@ export class DailyLog {
     dayStartedAt = "";
     dayEndedAt = "";
     totalWorkingHours = "";
+    showWorkingTooMuchWarning = false;
 
     constructor(logEntryApi) {
         this.logEntryApi = logEntryApi;
@@ -82,7 +83,10 @@ export class DailyLog {
         if(0 < this.entries.length) {
             this.dayStartedAt = this.entries[0].Start;
             this.dayEndedAt = this.entries[this.entries.length -1].End;
-            this.totalWorkingHours = Duration.formatDurationMinutes(this.entries.map(e => e.Duration).reduce((a, b) => a + b, 0));
+
+            const totalDuration = this.entries.map(e => e.Duration).reduce((a, b) => a + b, 0);
+            this.totalWorkingHours = Duration.formatDurationMinutes(totalDuration);
+            this.showWorkingTooMuchWarning = 600 < totalDuration;
         } else {
             this.dayStartedAt = "";
             this.dayEndedAt = "";
