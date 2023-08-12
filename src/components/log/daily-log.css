@@ -1,3 +1,7 @@
 a.panel-block table.table {
     width: 100%;
 }
+
+img.plus-minus {
+    width: 16px;
+}

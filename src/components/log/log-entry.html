@@ -1,17 +1,17 @@
 <template>
-    <td click.trigger="toggleMode()">
+    <td click.trigger="toggleMode()" style="vertical-align: middle;">
         <span if.bind="!editMode">${start}</span>
         <input class="input" type="time" if.bind="editMode" value.two-way="start">
     </td>
-    <td click.trigger="toggleMode()">
+    <td click.trigger="toggleMode()" style="vertical-align: middle;">
         <span if.bind="!editMode">${end}</span>
         <input class="input" type="time" if.bind="editMode" value.two-way="end">
     </td>
-    <td click.trigger="toggleMode()">
+    <td click.trigger="toggleMode()" style="vertical-align: middle;">
         <span if.bind="!editMode">${duration}</span>
         <div style="margin-top: 7px;" if.bind="editMode">${duration}</div>
     </td>
-    <td click.trigger="toggleMode()">
+    <td click.trigger="toggleMode()" style="vertical-align: middle;">
         <span if.bind="!editMode">${project}</span>
         <input class="input" style="box-sizing: border-box; width: 100%;" type="text" value.two-way="project"
             list="suggestedProjects" if.bind="editMode">
@@ -19,7 +19,7 @@
             <option repeat.for="project of projectSuggestions" value.bind="project"></option>
         </datalist>
     </td>
-    <td click.trigger="toggleMode()">
+    <td click.trigger="toggleMode()" style="vertical-align: middle;">
         <span if.bind="!editMode">${description}</span>
         <input class="input" style="box-sizing: border-box; width: 100%;" type="text" value.two-way="description"
             if.bind="editMode">
