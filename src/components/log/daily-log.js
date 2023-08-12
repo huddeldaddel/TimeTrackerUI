@@ -1,17 +1,20 @@
 import { bindable, inject } from 'aurelia-framework';
+import { BindingSignaler } from "aurelia-templating-resources";
 import { Duration } from '../../model/duration';
 import { LogEntryApi } from '../../services/log-entry-api';
 
-@inject(LogEntryApi)
+@inject(BindingSignaler, LogEntryApi)
 export class DailyLog {
 
     @bindable date;
+
     dayStartedAt = "";
     dayEndedAt = "";
     totalWorkingHours = "";
-    showWorkingTooMuchWarning = false;
+    showWorkingTooMuchWarning = false;    
 
-    constructor(logEntryApi) {
+    constructor(signaler, logEntryApi) {
+        this.signaler = signaler;
         this.logEntryApi = logEntryApi;
         this.collapsed = true;
         this.entries = [];
@@ -63,16 +66,19 @@ export class DailyLog {
     handleAdd(newEntry) {
         this.entries = this.entries.concat([newEntry]);
         this.sortEntries();
+        this.signaler.signal('entries-updated');
     }
 
     handleDelete(deletedEntry) {
         this.entries = this.entries.filter((entry) => entry.Id !== deletedEntry.Id);
         this.sortEntries();
+        this.signaler.signal('entries-updated');
     }
 
     handleUpdate(updatedEntry) {
         this.entries = this.entries.filter((entry) => entry.Id !== deletedEntry.Id).concat([updatedEntry]);
         this.sortEntries();
+        this.signaler.signal('entries-updated');
     }
 
     sortEntries() {
@@ -80,9 +86,9 @@ export class DailyLog {
             return `${a.Date} ${a.Start}`.localeCompare(`${b.Date} ${b.Start}`);
         });
 
-        if(0 < this.entries.length) {
+        if (0 < this.entries.length) {
             this.dayStartedAt = this.entries[0].Start;
-            this.dayEndedAt = this.entries[this.entries.length -1].End;
+            this.dayEndedAt = this.entries[this.entries.length - 1].End;
 
             const totalDuration = this.entries.map(e => e.Duration).reduce((a, b) => a + b, 0);
             this.totalWorkingHours = Duration.formatDurationMinutes(totalDuration);
@@ -92,6 +98,13 @@ export class DailyLog {
             this.dayEndedAt = "";
             this.totalWorkingHours = "";
         }
+    }
+
+    isOverlapping(logEntry) {
+        return this.entries
+            .filter((e) => e.Id !== logEntry.Id)
+            .some((e) => (e.Start <= logEntry.Start) && (e.End > logEntry.Start));
+
     }
 
 }
