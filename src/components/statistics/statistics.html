@@ -1,25 +1,27 @@
 <template>
+    <require from="../spinner.html"></require>
+
     <section class="section">
         <div class="container">
             <div class="tile is-ancestor">
                 <div class="tile is-6 is-vertical is-parent">
                     <div class="tile is-child box">
-                        <div class="has-text-centered has-text-weight-bold">Today</div>
-                        <canvas id="day"></canvas>
+                        <div class="has-text-centered has-text-weight-bold">Today <spinner if.bind="loadingToday"></spinner></div>
+                        <canvas id="day"></canvas>                        
                     </div>
                     <div class="tile is-child box">
-                        <div class="has-text-centered has-text-weight-bold">This month</div>
-                        <canvas id="month"></canvas>
+                        <div class="has-text-centered has-text-weight-bold">This month <spinner if.bind="loadingStats"></spinner></div>
+                        <canvas id="month"></canvas>                        
                     </div>
                 </div>
                 <div class="tile is-6 is-vertical is-parent">
                     <div class="tile is-child box">
-                        <div class="has-text-centered has-text-weight-bold">This week</div>
+                        <div class="has-text-centered has-text-weight-bold">This week <spinner if.bind="loadingStats"></spinner></div>
                         <canvas id="week"></canvas>
                     </div>
                     <div class="tile is-child box">
-                        <div class="has-text-centered has-text-weight-bold">This year</div>
-                        <canvas id="year"></canvas>
+                        <div class="has-text-centered has-text-weight-bold">This year <spinner if.bind="loadingStats"></spinner></div>
+                        <canvas id="year"></canvas>                        
                     </div>
                 </div>
             </div>
