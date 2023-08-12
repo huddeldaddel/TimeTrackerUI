@@ -3,5 +3,6 @@ a.panel-block table.table {
 }
 
 img.plus-minus {
+    cursor: pointer;
     width: 16px;
 }
