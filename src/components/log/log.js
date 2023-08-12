@@ -13,6 +13,10 @@ export class Log {
     }
 
     showNextWeek() {
+        if(this.weekOffset === 0) {
+            return;
+        }
+        
         this.weekOffset++;
         this.weekStart = new Date(this.weekStart);
         this.weekStart.setDate(this.weekStart.getDate() + 7);
