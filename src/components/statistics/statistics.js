@@ -65,7 +65,7 @@ export class Statistics {
     }
 
     createChartForMonth() {
-        const month = new Date().getMonth();
+        const month = new Date().getMonth() +1;
         const monthContainer = this.statistics.Months[month];
         if (monthContainer) {
             const { labels, backgroundColors, minutes } = this.computeChartData(monthContainer.Projects);
