@@ -14,7 +14,7 @@
     "chart.js": "^4.3.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.5",
+    "@babel/core": "^7.22.10",
     "@babel/eslint-parser": "^7.22.10",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-decorators": "^7.22.10",
