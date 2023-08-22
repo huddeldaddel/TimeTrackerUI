@@ -76,7 +76,7 @@ export class DailyLog {
     }
 
     handleUpdate(updatedEntry) {
-        this.entries = this.entries.filter((entry) => entry.Id !== deletedEntry.Id).concat([updatedEntry]);
+        this.entries = this.entries.filter((entry) => entry.Id !== updatedEntry.Id).concat([updatedEntry]);
         this.sortEntries();
         this.signaler.signal('entries-updated');
     }

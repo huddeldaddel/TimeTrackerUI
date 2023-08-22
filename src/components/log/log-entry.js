@@ -120,16 +120,15 @@ export class LogEntry {
             .catch(error => console.error("Deleting a log entry failed", error));
     }
 
-    toggleMode() {
-        console.log("toggleMode");
+    toggleMode() {        
         this.editMode = true;
     }
 
-    startChanged(newValue, oldValue) {
+    startChanged() {
         this.calculateDuration();
     }
 
-    endChanged(newValue, oldValue) {
+    endChanged() {
         this.calculateDuration();
     }
 
