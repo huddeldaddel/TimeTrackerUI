@@ -75,6 +75,7 @@ export class LogEntry {
     updateExistingRecord() {
         this.entry.Start = this.start;
         this.entry.End = this.end;
+        this.entry.Duration = new Duration(this.start, this.end).getDurationInMinutes();
         this.entry.Project = this.project;
         this.entry.Description = this.description;
         this.logEntryApi.updateLogEntry(this.entry)
