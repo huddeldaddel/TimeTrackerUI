@@ -9,9 +9,16 @@
         <img src="/static/favicon-32x32.png" alt="TimeTracker" width="24" height="24">
         <h1 class="is-size-4">TimeTracker</h1>
       </a>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample"
+        click.trigger="toggleMobileMenu()">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
     </div>
 
-    <div class="navbar-menu">
+    <div class="navbar-menu ${mobileMenuVisible ? 'is-active' : ''}">
       <div class="navbar-start">
 
         <a class="navbar-item ${activeTab == 'log' ? 'is-active' : ''}" click.trigger="showLog()">

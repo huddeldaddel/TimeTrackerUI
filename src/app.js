@@ -1,5 +1,7 @@
 export class App {  
 
+  mobileMenuVisible = false;
+
   constructor() {
     this.activeTab = 'log';        
   } 
@@ -14,6 +16,10 @@ export class App {
 
   showSettings() {
     this.activeTab = 'settings';
+  }
+
+  toggleMobileMenu() {
+    this.mobileMenuVisible = !this.mobileMenuVisible;
   }
 
 }
