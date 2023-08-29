@@ -9,7 +9,7 @@ export class Statistics {
 
     colorPaletteTemplate = ['#36a2eb', '#ff6384', '#4bc0c0', '#ff9f40', '#9966ff', '#ffcd56', '#c9cbcf'].reverse();
     colorPalette = [];
-    projectColors = {};
+    projectColors = {};    
 
     constructor(logEntryApi, statisticsApi) {
         this.logEntryApi = logEntryApi;
@@ -19,6 +19,7 @@ export class Statistics {
         this.loadingToday = false;
         this.statistics = null;
         this.todaysEntries = [];
+        this.charts = [];
     }
 
     attached() {
@@ -50,6 +51,13 @@ export class Statistics {
                 this.loadingStats = false;
                 this.statistics = null;
             });
+    }
+
+    detached() {
+        for(var i=0; i<this.charts.length; i++) {
+            this.charts[i].destroy();
+        }
+        this.charts = [];
     }
 
     createCharts() {
@@ -140,8 +148,8 @@ export class Statistics {
         };
     }
 
-    renderChart(elementId, labels, minutes, backgroundColors) {
-        new Chart(document.getElementById(elementId), {
+    renderChart(elementId, labels, minutes, backgroundColors) {        
+        let newChart = new Chart(document.getElementById(elementId), {
             type: 'pie',
             data: {
                 labels: labels,
@@ -160,6 +168,7 @@ export class Statistics {
                 }
             }
         });
+        this.charts.push(newChart);
     }
 
 }
