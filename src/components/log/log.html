@@ -5,8 +5,8 @@
         <div class="container">
 
             <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-                <a class="pagination-previous" click.trigger="showPreviousWeek()">Previous week</a>
-                <a class="pagination-next ${weekOffset == 0 ? 'is-disabled' : ''}" click.trigger="showNextWeek()">Next week</a>                
+                <a class="pagination-previous button" click.trigger="showPreviousWeek()">Previous week</a>
+                <a class="pagination-next button ${weekOffset == 0 ? 'is-disabled' : ''}" click.trigger="showNextWeek()">Next week</a>                
               </nav>
 
               <daily-log repeat.for="day of days" date.bind="day"></daily-log>

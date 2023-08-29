@@ -1,3 +1,15 @@
+nav.panel {
+    margin-bottom: 5px;
+}
+
+p.panel-heading.collapsed {
+    border-radius: 6px;
+}
+
+a.panel-block, label.panel-block {
+    background-color: #f5f5f5;
+  }
+
 a.panel-block table.table {
     width: 100%;
 }

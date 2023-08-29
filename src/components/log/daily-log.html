@@ -4,7 +4,7 @@
     <require from="./log-entry"></require>
 
     <nav class="panel">
-        <p class="panel-heading">
+        <p class="panel-heading ${collapsed ? 'collapsed' : ''}">
             <span class="icon">
                 <img class="plus-minus" src="/static/minus.svg" if.bind="!collapsed" click.trigger="toggleCollapsed()">
                 <img class="plus-minus" src="/static/plus.svg" if.bind="collapsed" click.trigger="toggleCollapsed()">
