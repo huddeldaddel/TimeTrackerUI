@@ -37,7 +37,7 @@
     "eslint": "^8.51.0",
     "expose-loader": "^4.1.0",
     "gulp": "^4.0.2",
-    "gulp-eslint-new": "^1.8.3",
+    "gulp-eslint-new": "^1.8.4",
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.3",
     "jest": "^29.7.0",
