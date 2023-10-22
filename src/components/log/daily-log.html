@@ -4,13 +4,26 @@
     <require from="./log-entry"></require>
 
     <nav class="panel">
-        <p class="panel-heading ${collapsed ? 'collapsed' : ''}">
+        <div class="panel-heading ${collapsed ? 'collapsed' : ''}">
             <span class="icon">
-                <img class="plus-minus" src="/static/minus.svg" if.bind="!collapsed" click.trigger="toggleCollapsed()">
-                <img class="plus-minus" src="/static/plus.svg" if.bind="collapsed" click.trigger="toggleCollapsed()">
+                <img class="clickable-icon" src="/static/minus.svg" if.bind="!collapsed"
+                    click.trigger="toggleCollapsed()">
+                <img class="clickable-icon" src="/static/plus.svg" if.bind="collapsed"
+                    click.trigger="toggleCollapsed()">
             </span>
             ${header}
-        </p>
+            <span class="icon icon-right">
+                <img class="clickable-icon" src="/static/day-off.svg" title="Leave day" if.bind="vacation === 2">
+                <img class="clickable-icon" src="/static/half-day-off.svg" title="Half leave day"
+                    if.bind="vacation === 1">
+                <img class="clickable-icon" src="/static/home-office.svg" title="Work day (in home office)"
+                    if.bind="homeoffice">
+                <img class="clickable-icon" src="/static/public-holiday.svg" title="Public holiday"
+                    if.bind="publicholiday">
+                <img class="clickable-icon" src="/static/sick-leave.svg" title="Sick leave" if.bind="sickleave">
+                <img class="clickable-icon" src="/static/weekend.svg" title="Weekend" if.bind="weekend">
+            </span>
+        </div>
         <a class="panel-block" if.bind="!collapsed">
             <table class="table">
                 <thead>
@@ -35,8 +48,10 @@
                 </tfoot>
                 <tbody>
                     <tr as-element="log-entry" repeat.for="entry of entries" date.bind="header" entry.bind="entry"
-                        ondelete.bind="deleteHook" onupdate.bind="updateHook" class="${isOverlapping(entry) ? 'has-background-warning' : '' & signal:'entries-updated'}"></tr>
-                    <tr as-element="log-entry" date.bind="header" onadd.bind="addHook" if.bind="!loading && (null == error)"></tr>
+                        ondelete.bind="deleteHook" onupdate.bind="updateHook"
+                        class="${isOverlapping(entry) ? 'has-background-warning' : '' & signal:'entries-updated'}"></tr>
+                    <tr as-element="log-entry" date.bind="header" onadd.bind="addHook"
+                        if.bind="!loading && (null == error)"></tr>
                     <tr if.bind="error != null">
                         <td colspan="6" class="has-background-danger">${error}</td>
                     </tr>

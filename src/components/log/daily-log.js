@@ -1,4 +1,4 @@
-import { bindable, inject } from 'aurelia-framework';
+import { bindable, inject, observable } from 'aurelia-framework';
 import { BindingSignaler } from "aurelia-templating-resources";
 import { formatDateAsISO8601 } from '../../utils';
 import { Duration } from '../../model/duration';
@@ -8,22 +8,26 @@ import { LogEntryApi } from '../../services/log-entry-api';
 export class DailyLog {
 
     @bindable date;
-    @bindable absence;
+    @observable @bindable absence;
 
+    collapsed = true;
     dayStartedAt = "";
     dayEndedAt = "";
+    vacation = 0;
+    entries = [];
+    error = null;
+    header = "";
+    homeoffice = false;
+    loading = false;
+    publicholiday = false;
+    sickleave = false;
     totalWorkingHours = "";
-    showWorkingTooMuchWarning = false;    
+    weekend = false;
+    showWorkingTooMuchWarning = false;
 
     constructor(signaler, logEntryApi) {
         this.signaler = signaler;
         this.logEntryApi = logEntryApi;
-        this.collapsed = true;
-        this.entries = [];
-        this.error = null;
-        this.loading = false;
-        this.header = "";
-
         this.addHook = this.handleAdd.bind(this);
         this.deleteHook = this.handleDelete.bind(this);
         this.updateHook = this.handleUpdate.bind(this);
@@ -31,9 +35,17 @@ export class DailyLog {
 
     attached() {
         this.header = formatDateAsISO8601(this.date);
+        this.weekend = (0 === this.date.getDay()) || (6 === this.date.getDay());
         this.collapsed = this.header !== formatDateAsISO8601(new Date());
         this.loadEntries();
-    }    
+    }
+
+    absenceChanged(newValue, oldValue) {        
+        this.homeoffice = newValue.HomeOffice;
+        this.sickleave = newValue.SickLeave;
+        this.publicholiday = newValue.PublicHoliday;
+        this.vacation = newValue.Vacation;
+    }
 
     toggleCollapsed() {
         this.collapsed = !this.collapsed;

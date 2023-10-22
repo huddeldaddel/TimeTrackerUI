@@ -6,15 +6,20 @@ p.panel-heading.collapsed {
     border-radius: 6px;
 }
 
-a.panel-block, label.panel-block {
+a.panel-block,
+label.panel-block {
     background-color: #f5f5f5;
-  }
+}
 
 a.panel-block table.table {
     width: 100%;
 }
 
-img.plus-minus {
+span.icon-right {
+    float: right;
+}
+
+img.clickable-icon {
     cursor: pointer;
     width: 16px;
 }
