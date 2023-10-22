@@ -45,7 +45,7 @@ export class LogEntryApi {
             });
     }
 
-    getLogEntriesForToday() {        
+    getLogEntriesForToday() {
         return this.getLogEntries(formatDateAsISO8601());
     }
 

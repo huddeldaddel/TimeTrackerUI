@@ -3,8 +3,9 @@ import { BindingSignaler } from "aurelia-templating-resources";
 import { formatDateAsISO8601 } from '../../utils';
 import { Duration } from '../../model/duration';
 import { LogEntryApi } from '../../services/log-entry-api';
+import { AbsenceApi } from '../../services/absence-api';
 
-@inject(BindingSignaler, LogEntryApi)
+@inject(AbsenceApi, BindingSignaler, LogEntryApi)
 export class DailyLog {
 
     @bindable date;
@@ -25,7 +26,8 @@ export class DailyLog {
     weekend = false;
     showWorkingTooMuchWarning = false;
 
-    constructor(signaler, logEntryApi) {
+    constructor(absenceApi, signaler, logEntryApi) {
+        this.absenceApi = absenceApi;
         this.signaler = signaler;
         this.logEntryApi = logEntryApi;
         this.addHook = this.handleAdd.bind(this);
@@ -40,7 +42,7 @@ export class DailyLog {
         this.loadEntries();
     }
 
-    absenceChanged(newValue, oldValue) {        
+    absenceChanged(newValue) {        
         this.homeoffice = newValue.HomeOffice;
         this.sickleave = newValue.SickLeave;
         this.publicholiday = newValue.PublicHoliday;
@@ -111,7 +113,37 @@ export class DailyLog {
         return this.entries
             .filter((e) => e.Id !== logEntry.Id)
             .some((e) => (e.Start <= logEntry.Start) && (e.End > logEntry.Start));
-
     }
 
+    toggleHomeOffice(value) {        
+        this.homeoffice = value;
+        this.absence.HomeOffice = value;
+        this.absenceApi.updateAbsences(this.absence).then(a => {
+            this.signaler.signal('absences-updated');
+        });
+    }
+
+    togglePublicHoliday(value) {        
+        this.publicholiday = value;        
+        this.absence.PublicHoliday = value;
+        this.absenceApi.updateAbsences(this.absence).then(a => {
+            this.signaler.signal('absences-updated');
+        });
+    }
+
+    toggleSickLeave(value) {        
+        this.sickleave = value;
+        this.absence.SickLeave = value;
+        this.absenceApi.updateAbsences(this.absence).then(a => {
+            this.signaler.signal('absences-updated');
+        });
+    }
+
+    updateVacation(value) {        
+        this.vacation = parseInt(value);
+        this.absence.Vacation = parseInt(value);
+        this.absenceApi.updateAbsences(this.absence).then(a => {
+            this.signaler.signal('absences-updated');
+        });
+    }
 }

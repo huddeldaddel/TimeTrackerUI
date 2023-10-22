@@ -30,4 +30,15 @@ export class AbsenceApi {
             });
     }
 
+    updateAbsences(absence) {
+        return this.http.fetch(`/absences`, {
+            method: 'put',
+            body: json(absence)
+        })
+            .then(response => response.json())
+            .then(result => {
+                return result;
+            });
+    }
+
 }
