@@ -25,6 +25,24 @@
             </span>
         </div>
         <div class="panel-block" if.bind="!collapsed">
+            <label class="checkbox" style="padding-left: 0.75em;">
+                <input type="checkbox">Home Office
+            </label>
+            <label class="checkbox ml-6">
+                <input type="checkbox">Public Holiday
+            </label>
+            <label class="checkbox ml-6">
+                <input type="checkbox">Sick Leave
+            </label>
+            <div class="select ml-6">
+                <select>
+                  <option value="0">Work Day</option>
+                  <option>Leave Day (50 %)</option>
+                  <option>Leave Day (100 %)</option>
+                </select>
+              </div>
+        </div>
+        <div class="panel-block" if.bind="!collapsed">
             <table class="table">
                 <thead>
                     <tr>
