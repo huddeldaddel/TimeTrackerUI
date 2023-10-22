@@ -1,13 +1,16 @@
 import { inject } from 'aurelia-framework';
+import { BindingSignaler } from "aurelia-templating-resources";
+import { formatDateAsISO8601 } from '../../utils';
 import { AbsenceApi } from '../../services/absence-api';
 
-@inject(AbsenceApi)
+@inject(AbsenceApi, BindingSignaler)
 export class Log {
 
-    absences = {};
+    absences = { };
 
-    constructor(absenceApi) {
+    constructor(absenceApi, signaler) {
         this.absenceApi = absenceApi;
+        this.signaler = signaler;
         let date = new Date();
         while(date.getDay() != 1) {
             date = new Date(date);
@@ -55,9 +58,17 @@ export class Log {
     }
 
     loadAbsences() {
-        let start = this.days[0];
-        let end = this.days[6];
-        this.absenceApi.getAbsences(start, end).then(a => this.absences = a);
+        const start = this.days[0];
+        const end = this.days[6];
+        this.absenceApi.getAbsences(start, end).then(a => { 
+            this.absences = a; 
+            this.signaler.signal('absences-updated');
+        });
+    }
+
+    getAbsenceForDay(day) {    
+        const key = formatDateAsISO8601(day);
+        return this.absences[key];                
     }
 
 }

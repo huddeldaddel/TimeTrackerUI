@@ -1,5 +1,6 @@
 import { HttpClient, json } from 'aurelia-fetch-client';
 import { inject } from 'aurelia-framework';
+import { formatDateAsISO8601 } from '../utils';
 import { ConfigService } from './config-service';
 
 @inject(HttpClient)
@@ -44,14 +45,8 @@ export class LogEntryApi {
             });
     }
 
-    getLogEntriesForToday() {
-        let formatDate = (date = new Date()) => {
-            const year = date.toLocaleString('default', { year: 'numeric' });
-            const month = date.toLocaleString('default', { month: '2-digit' });
-            const day = date.toLocaleString('default', { day: '2-digit' });
-            return [year, month, day].join('-');
-        };
-        return this.getLogEntries(formatDate());
+    getLogEntriesForToday() {        
+        return this.getLogEntries(formatDateAsISO8601());
     }
 
     updateLogEntry(entry) {

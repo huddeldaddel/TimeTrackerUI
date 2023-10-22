@@ -1,5 +1,6 @@
 import { HttpClient, json } from 'aurelia-fetch-client';
 import { inject } from 'aurelia-framework';
+import { formatDateAsISO8601 } from '../utils';
 import { ConfigService } from './config-service';
 
 @inject(HttpClient)
@@ -20,20 +21,13 @@ export class AbsenceApi {
     }
 
     getAbsences(start, end) {
-        let fStart = this.formatDate(start);
-        let fEnd = this.formatDate(end);
+        let fStart = formatDateAsISO8601(start);
+        let fEnd = formatDateAsISO8601(end);
         return this.http.fetch(`/absences/${fStart}/${fEnd}`)
             .then(response => response.json())
             .then(result => {
                 return result;
             });
-    }
-
-    formatDate(date) {
-        const year = date.toLocaleString('default', { year: 'numeric' });
-        const month = date.toLocaleString('default', { month: '2-digit' });
-        const day = date.toLocaleString('default', { day: '2-digit' });
-        return [year, month, day].join('-');
     }
 
 }

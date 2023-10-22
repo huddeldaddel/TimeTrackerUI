@@ -1,5 +1,6 @@
 import { bindable, inject } from 'aurelia-framework';
 import { BindingSignaler } from "aurelia-templating-resources";
+import { formatDateAsISO8601 } from '../../utils';
 import { Duration } from '../../model/duration';
 import { LogEntryApi } from '../../services/log-entry-api';
 
@@ -7,6 +8,7 @@ import { LogEntryApi } from '../../services/log-entry-api';
 export class DailyLog {
 
     @bindable date;
+    @bindable absence;
 
     dayStartedAt = "";
     dayEndedAt = "";
@@ -28,17 +30,10 @@ export class DailyLog {
     }
 
     attached() {
-        this.header = this.formatDate(this.date);
-        this.collapsed = this.header !== this.formatDate(new Date());
+        this.header = formatDateAsISO8601(this.date);
+        this.collapsed = this.header !== formatDateAsISO8601(new Date());
         this.loadEntries();
-    }
-
-    formatDate(date = new Date()) {
-        const year = date.toLocaleString('default', { year: 'numeric' });
-        const month = date.toLocaleString('default', { month: '2-digit' });
-        const day = date.toLocaleString('default', { day: '2-digit' });
-        return [year, month, day].join('-');
-    }
+    }    
 
     toggleCollapsed() {
         this.collapsed = !this.collapsed;
@@ -48,7 +43,7 @@ export class DailyLog {
     loadEntries() {
         if (!this.collapsed && this.entries.length === 0) {
             this.loading = true;
-            this.logEntryApi.getLogEntries(this.formatDate(this.date))
+            this.logEntryApi.getLogEntries(formatDateAsISO8601(this.date))
                 .then(x => {
                     this.entries = x;
                     this.sortEntries();
