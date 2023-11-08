@@ -4,3 +4,9 @@ export function formatDateAsISO8601(date = new Date()) {
     const day = date.toLocaleString('default', { day: '2-digit' });
     return [year, month, day].join('-');
 }
+
+export function formatDateAsISO8601Month(date = new Date()) {
+    const year = date.toLocaleString('default', { year: 'numeric' });
+    const month = date.toLocaleString('default', { month: '2-digit' });    
+    return [year, month].join('-');
+}

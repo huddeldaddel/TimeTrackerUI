@@ -5,23 +5,47 @@
         <div class="container">
             <div class="tile is-ancestor">
                 <div class="tile is-6 is-vertical is-parent">
-                    <div class="tile is-child box">
-                        <div class="has-text-centered has-text-weight-bold">Today <spinner if.bind="loadingToday"></spinner></div>
-                        <canvas id="day"></canvas>                        
+                    <div class="tile is-child box">                        
+                        <div class="has-text-centered has-text-weight-bold">Today <spinner if.bind="loadingToday">
+                            </spinner>
+                        </div>
+                        <canvas id="day"></canvas>
+                        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <a class="pagination-previous button" click.trigger="showPreviousDay()">Previous day</a>
+                            <a class="pagination-next button" click.trigger="showNextDay()">Next day</a>
+                        </nav>
                     </div>
-                    <div class="tile is-child box">
-                        <div class="has-text-centered has-text-weight-bold">This month <spinner if.bind="loadingStats"></spinner></div>
-                        <canvas id="month"></canvas>                        
+                    <div class="tile is-child box">                        
+                        <div class="has-text-centered has-text-weight-bold">Month: ${selectedMonth} <spinner if.bind="loadingStats">
+                            </spinner>
+                        </div>
+                        <canvas id="month"></canvas>
+                        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <a class="pagination-previous button" click.trigger="showPreviousMonth()">Previous month</a>
+                            <a class="pagination-next button" click.trigger="showNextMonth()">Next month</a>
+                        </nav>
                     </div>
                 </div>
                 <div class="tile is-6 is-vertical is-parent">
-                    <div class="tile is-child box">
-                        <div class="has-text-centered has-text-weight-bold">This week <spinner if.bind="loadingStats"></spinner></div>
+                    <div class="tile is-child box">                        
+                        <div class="has-text-centered has-text-weight-bold">This week <spinner if.bind="loadingStats">
+                            </spinner>
+                        </div>
                         <canvas id="week"></canvas>
+                        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <a class="pagination-previous button" click.trigger="showPreviousWeek()">Previous week</a>
+                            <a class="pagination-next button" click.trigger="showNextWeek()">Next week</a>
+                        </nav>
                     </div>
-                    <div class="tile is-child box">
-                        <div class="has-text-centered has-text-weight-bold">This year <spinner if.bind="loadingStats"></spinner></div>
-                        <canvas id="year"></canvas>                        
+                    <div class="tile is-child box">                        
+                        <div class="has-text-centered has-text-weight-bold">Year: ${selectedYear}<spinner if.bind="loadingStats">
+                            </spinner>
+                        </div>
+                        <canvas id="year"></canvas>
+                        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <a class="pagination-previous button" click.trigger="showPreviousYear()">Previous year</a>
+                            <a class="pagination-next button" click.trigger="showNextYear()">Next year</a>
+                        </nav>
                     </div>
                 </div>
             </div>

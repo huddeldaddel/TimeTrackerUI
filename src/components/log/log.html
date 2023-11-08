@@ -1,4 +1,4 @@
-<template>    
+<template>
     <require from="./daily-log"></require>
 
     <section class="section">
@@ -6,11 +6,13 @@
 
             <nav class="pagination is-centered" role="navigation" aria-label="pagination">
                 <a class="pagination-previous button" click.trigger="showPreviousWeek()">Previous week</a>
-                <a class="pagination-next button ${weekOffset == 0 ? 'is-disabled' : ''}" click.trigger="showNextWeek()">Next week</a>                
-              </nav>
+                <a class="pagination-next button ${weekOffset == 0 ? 'is-disabled' : ''}"
+                    click.trigger="showNextWeek()">Next week</a>
+            </nav>
 
-              <daily-log repeat.for="day of days" date.bind="day" absence.bind="getAbsenceForDay(day) & signal:'absences-updated'"></daily-log>
+            <daily-log repeat.for="day of days" date.bind="day"
+                absence.bind="getAbsenceForDay(day) & signal:'absences-updated'"></daily-log>
         </div>
     </section>
-    
+
 </template>

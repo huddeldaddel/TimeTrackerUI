@@ -2,6 +2,7 @@ import { inject } from 'aurelia-framework';
 import { Chart } from 'chart.js/auto'
 import { LogEntryApi } from '../../services/log-entry-api';
 import { StatisticsApi } from '../../services/statistics-api';
+import { formatDateAsISO8601, formatDateAsISO8601Month } from '../../utils';
 
 
 @inject(LogEntryApi, StatisticsApi)
@@ -17,7 +18,12 @@ export class Statistics {
         this.error = null;
         this.loadingStats = false;
         this.loadingToday = false;
+        this.selectedDay = formatDateAsISO8601(new Date());
+        this.selectedWeek = formatDateAsISO8601(new Date());
+        this.selectedMonth = formatDateAsISO8601Month(new Date());        
+        this.selectedYear = new Date().getFullYear();        
         this.statistics = null;
+        this.statisticsByYear = {};
         this.todaysEntries = [];
         this.charts = [];
     }
@@ -39,18 +45,7 @@ export class Statistics {
                 this.todaysEntries = [];
             });
 
-        this.statisticsApi.getStatistics(new Date().getFullYear())
-            .then(stats => {
-                this.loadingStats = false;
-                this.statistics = stats;
-                this.createCharts();
-            })
-            .catch(error => {
-                console.error(error);
-                this.error = error;
-                this.loadingStats = false;
-                this.statistics = null;
-            });
+        this.loadStatisticsForYear(new Date().getFullYear());
     }
 
     detached() {
@@ -60,6 +55,22 @@ export class Statistics {
         this.charts = [];
     }
 
+    loadStatisticsForYear(year) {
+        this.loadingStats = true;
+        this.statisticsApi.getStatistics(year)
+            .then(stats => {
+                this.loadingStats = false;
+                this.statisticsByYear[year] = stats;                
+                this.createCharts();
+            })
+            .catch(error => {
+                console.error(error);
+                this.error = error;
+                this.loadingStats = false;
+                this.statisticsByYear[year] = undefined;
+            });
+    }
+
     createCharts() {
         this.createChartForYear();
         this.createChartForMonth();
@@ -67,14 +78,14 @@ export class Statistics {
     }
 
     createChartForYear() {
-        const dataContainer = this.statistics.Year.Projects;
+        const dataContainer = this.statisticsByYear[this.selectedYear].Year.Projects;
         const { labels, backgroundColors, minutes } = this.computeChartData(dataContainer);
         this.renderChart('year', labels, minutes, backgroundColors);
     }
 
-    createChartForMonth() {
-        const month = new Date().getMonth() +1;
-        const monthContainer = this.statistics.Months[month];
+    createChartForMonth() {        
+        const month = parseInt(this.selectedMonth.split("-")[1], 10);
+        const monthContainer = this.statisticsByYear[this.selectedMonth.split("-")[0]].Months[month];
         if (monthContainer) {
             const { labels, backgroundColors, minutes } = this.computeChartData(monthContainer.Projects);
             this.renderChart('month', labels, minutes, backgroundColors);
@@ -82,14 +93,14 @@ export class Statistics {
     }
 
     createChartForWeek() {
-        const now = new Date();
+        const now = new Date(this.selectedWeek);
         const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
         const dayNum = d.getUTCDay() || 7;
         d.setUTCDate(d.getUTCDate() + 4 - dayNum);
         const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
         const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 
-        const weekContainer = this.statistics.Weeks[week];
+        const weekContainer = this.statisticsByYear[yearStart.getFullYear()].Weeks[week];
         if (weekContainer) {
             const { labels, backgroundColors, minutes } = this.computeChartData(weekContainer.Projects);
             this.renderChart('week', labels, minutes, backgroundColors);
