@@ -10,8 +10,7 @@ export class Statistics {
 
     colorPaletteTemplate = ['#36a2eb', '#ff6384', '#4bc0c0', '#ff9f40', '#9966ff', '#ffcd56', '#c9cbcf'].reverse();
     colorPalette = [];    
-    projectColors = {};
-    canMoveToNextDay = false;
+    projectColors = {};    
     canMoveToNextWeek = false;
     canMoveToNextMonth = false;
     canMoveToNextYear = false;
@@ -217,6 +216,67 @@ export class Statistics {
         return newChart;
     }
 
+    showPreviousWeek() {
+        let startOfSelectedWeek = new Date(this.selectedWeek);
+        let yearOfSelectedWeek = startOfSelectedWeek.getFullYear();        
+        let previousWeek = new Date(startOfSelectedWeek);
+        previousWeek.setDate(startOfSelectedWeek.getDate() -7);        
+        this.selectedWeek = formatDateAsISO8601(previousWeek);        
+
+        if(previousWeek.getFullYear() !== yearOfSelectedWeek) {
+            this.loadStatisticsForWeekChart();
+        } else {
+            this.createChartForWeek();
+        }
+        this.canMoveToNextWeek = true;
+    }
+
+    showNextWeek() {
+        if(!this.canMoveToNextWeek)
+            return;
+
+        let startOfSelectedWeek = new Date(this.selectedWeek);
+        let yearOfSelectedWeek = startOfSelectedWeek.getFullYear();
+        let nextWeek = new Date(startOfSelectedWeek);
+        nextWeek.setDate(startOfSelectedWeek.getDate() +7);        
+        this.selectedWeek = formatDateAsISO8601(nextWeek);
+        
+        if(nextWeek.getFullYear() !== yearOfSelectedWeek) {
+            this.loadStatisticsForWeekChart();
+        } else {
+            this.createChartForWeek();
+        }
+        this.canMoveToNextWeek = !this.isCurrentWeekSelected();
+    }
+
+    loadStatisticsForWeekChart() {        
+        let year = new Date(this.selectedWeek).getFullYear();        
+        if(!this.statisticsByYear[year]) {
+            this.loadingStats = true;
+            this.statisticsApi.getStatistics(year)
+                .then(stats => {
+                    this.loadingStats = false;
+                    this.statisticsByYear[year] = stats;
+                    this.createChartForWeek();
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.error = error;
+                    this.loadingStats = false;
+                    this.statisticsByYear[year] = undefined;
+                });
+        } else {
+            this.createChartForWeek();
+        }
+    }
+
+    isCurrentWeekSelected() {
+        let today = new Date();
+        let comp = new Date(this.selectedWeek);
+        comp.setDate(today.getDate() + 7);
+        return comp.getTime() > today.getTime();        
+    }
+
     showPreviousMonth() {
         if("01" === this.selectedMonth.month) {
             this.selectedMonth = {
@@ -263,7 +323,7 @@ export class Statistics {
                     console.error(error);
                     this.error = error;
                     this.loadingStats = false;
-                    this.statisticsByYear[year] = undefined;
+                    this.statisticsByYear[this.selectedMonth.year] = undefined;
                 });
         } else {
             this.createChartForMonth();
@@ -307,7 +367,7 @@ export class Statistics {
                     console.error(error);
                     this.error = error;
                     this.loadingStats = false;
-                    this.statisticsByYear[year] = undefined;
+                    this.statisticsByYear[this.selectedYear] = undefined;
                 });
         } else {
             this.createChartForYear();

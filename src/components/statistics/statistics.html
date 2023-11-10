@@ -9,11 +9,7 @@
                         <div class="has-text-centered has-text-weight-bold">Today <spinner if.bind="loadingToday">
                             </spinner>
                         </div>
-                        <canvas id="day"></canvas>
-                        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-                            <a class="pagination-previous button" click.trigger="showPreviousDay()">Previous day</a>
-                            <a class="pagination-next button" click.trigger="showNextDay()">Next day</a>
-                        </nav>
+                        <canvas id="day"></canvas>                        
                     </div>
                     <div class="tile is-child box">                        
                         <div class="has-text-centered has-text-weight-bold">Month: ${selectedMonth.year}-${selectedMonth.month} <spinner if.bind="loadingStats">
@@ -34,7 +30,7 @@
                         <canvas id="week"></canvas>
                         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
                             <a class="pagination-previous button" click.trigger="showPreviousWeek()">Previous week</a>
-                            <a class="pagination-next button" click.trigger="showNextWeek()">Next week</a>
+                            <a class="pagination-next button ${canMoveToNextWeek ? '' : 'is-disabled'}" click.trigger="showNextWeek()">Next week</a>
                         </nav>
                     </div>
                     <div class="tile is-child box">                        
