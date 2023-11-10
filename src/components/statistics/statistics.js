@@ -2,15 +2,19 @@ import { inject } from 'aurelia-framework';
 import { Chart } from 'chart.js/auto'
 import { LogEntryApi } from '../../services/log-entry-api';
 import { StatisticsApi } from '../../services/statistics-api';
-import { formatDateAsISO8601, formatDateAsISO8601Month } from '../../utils';
+import { formatDateAsISO8601 } from '../../utils';
 
 
 @inject(LogEntryApi, StatisticsApi)
 export class Statistics {
 
     colorPaletteTemplate = ['#36a2eb', '#ff6384', '#4bc0c0', '#ff9f40', '#9966ff', '#ffcd56', '#c9cbcf'].reverse();
-    colorPalette = [];
-    projectColors = {};    
+    colorPalette = [];    
+    projectColors = {};
+    canMoveToNextDay = false;
+    canMoveToNextWeek = false;
+    canMoveToNextMonth = false;
+    canMoveToNextYear = false;
 
     constructor(logEntryApi, statisticsApi) {
         this.logEntryApi = logEntryApi;
@@ -20,12 +24,15 @@ export class Statistics {
         this.loadingToday = false;
         this.selectedDay = formatDateAsISO8601(new Date());
         this.selectedWeek = formatDateAsISO8601(new Date());
-        this.selectedMonth = formatDateAsISO8601Month(new Date());        
-        this.selectedYear = new Date().getFullYear();        
+        this.selectedMonth = {
+            year: new Date().getFullYear(),
+            month: new Date().toLocaleString('default', { month: '2-digit' })
+        };
+        this.selectedYear = new Date().getFullYear();
         this.statistics = null;
         this.statisticsByYear = {};
         this.todaysEntries = [];
-        this.charts = [];
+        this.charts = { day: null, week: null, month: null, year: null};
     }
 
     attached() {
@@ -49,10 +56,22 @@ export class Statistics {
     }
 
     detached() {
-        for(var i=0; i<this.charts.length; i++) {
-            this.charts[i].destroy();
+        if(null != this.charts.day) {
+            this.charts.day.destroy();
+            this.charts.day = null;
         }
-        this.charts = [];
+        if(null != this.charts.week) {
+            this.charts.week.destroy();
+            this.charts.week = null;
+        }
+        if(null != this.charts.month) {
+            this.charts.month.destroy();
+            this.charts.month = null;
+        }
+        if(null != this.charts.year) {
+            this.charts.year.destroy();
+            this.charts.year = null;
+        }
     }
 
     loadStatisticsForYear(year) {
@@ -60,7 +79,7 @@ export class Statistics {
         this.statisticsApi.getStatistics(year)
             .then(stats => {
                 this.loadingStats = false;
-                this.statisticsByYear[year] = stats;                
+                this.statisticsByYear[year] = stats;
                 this.createCharts();
             })
             .catch(error => {
@@ -78,21 +97,32 @@ export class Statistics {
     }
 
     createChartForYear() {
+        if(null != this.charts.year) {
+            this.charts.year.destroy();
+            this.charts.year = null;
+        }
         const dataContainer = this.statisticsByYear[this.selectedYear].Year.Projects;
         const { labels, backgroundColors, minutes } = this.computeChartData(dataContainer);
-        this.renderChart('year', labels, minutes, backgroundColors);
+        this.charts.year = this.renderChart('year', labels, minutes, backgroundColors);
     }
 
-    createChartForMonth() {        
-        const month = parseInt(this.selectedMonth.split("-")[1], 10);
-        const monthContainer = this.statisticsByYear[this.selectedMonth.split("-")[0]].Months[month];
+    createChartForMonth() {
+        if(null != this.charts.month) {
+            this.charts.month.destroy();
+            this.charts.month = null;
+        }
+        const monthContainer = this.statisticsByYear[this.selectedMonth.year].Months[parseInt(this.selectedMonth.month, 10)];
         if (monthContainer) {
             const { labels, backgroundColors, minutes } = this.computeChartData(monthContainer.Projects);
-            this.renderChart('month', labels, minutes, backgroundColors);
+            this.charts.month = this.renderChart('month', labels, minutes, backgroundColors);
         }
     }
 
     createChartForWeek() {
+        if(null != this.charts.week) {
+            this.charts.week.destroy();
+            this.charts.week = null;
+        }
         const now = new Date(this.selectedWeek);
         const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
         const dayNum = d.getUTCDay() || 7;
@@ -103,18 +133,23 @@ export class Statistics {
         const weekContainer = this.statisticsByYear[yearStart.getFullYear()].Weeks[week];
         if (weekContainer) {
             const { labels, backgroundColors, minutes } = this.computeChartData(weekContainer.Projects);
-            this.renderChart('week', labels, minutes, backgroundColors);
+            this.charts.week = this.renderChart('week', labels, minutes, backgroundColors);
         }
     }
 
     createChartsForToday() {
+        if(null != this.charts.day) {
+            this.charts.day.destroy();
+            this.charts.day = null;
+        }
+
         const labels = [];
         const backgroundColors = [];
         const minutes = [];
 
         this.todaysEntries.forEach((entry) => {
             let projectIdx = labels.indexOf(entry.Project);
-            if(-1 === projectIdx) {
+            if (-1 === projectIdx) {
                 labels.push(entry.Project);
                 if (!this.projectColors[entry.Project]) {
                     if (0 == this.colorPalette.length) {
@@ -126,10 +161,10 @@ export class Statistics {
                 minutes.push(entry.Duration);
             } else {
                 minutes[projectIdx] += entry.Duration;
-            }            
+            }
         });
 
-        this.renderChart('day', labels, minutes, backgroundColors);        
+        this.charts.day = this.renderChart('day', labels, minutes, backgroundColors);
     }
 
     computeChartData(dataContainer) {
@@ -159,7 +194,7 @@ export class Statistics {
         };
     }
 
-    renderChart(elementId, labels, minutes, backgroundColors) {        
+    renderChart(elementId, labels, minutes, backgroundColors) {
         let newChart = new Chart(document.getElementById(elementId), {
             type: 'pie',
             data: {
@@ -179,7 +214,75 @@ export class Statistics {
                 }
             }
         });
-        this.charts.push(newChart);
+        return newChart;
+    }
+
+    showPreviousMonth() {
+        if("01" === this.selectedMonth.month) {
+            this.selectedMonth = {
+                year: this.selectedMonth.year -1,
+                month: "12"
+            };
+            this.loadStatisticsForMonthChart();
+        } else {
+            var m = parseInt(this.selectedMonth.month, 10) -1;
+            this.selectedMonth.month = (m < 10) ? `0${m}` : `${m}`;
+            this.createChartForMonth();
+        }
+        this.canMoveToNextMonth = true;
+    }
+
+    showNextMonth() {
+        if(this.isCurrentMonthSelected()) 
+            return;
+
+        if("12" === this.selectedMonth.month) {
+            this.selectedMonth = {
+                year: this.selectedMonth.year +1,
+                month: "01"
+            };
+            this.loadStatisticsForMonthChart();
+        } else {
+            var m = parseInt(this.selectedMonth.month, 10) +1;
+            this.selectedMonth.month = (m < 10) ? `0${m}` : `${m}`;
+            this.createChartForMonth();
+        }
+
+        let today = new Date();                   
+        var thisMonth = [
+            today.toLocaleString('default', { year: 'numeric' }), 
+            today.toLocaleString('default', { month: '2-digit' })
+        ].join('-');
+        this.canMoveToNextMonth = !this.isCurrentMonthSelected();
+    }
+
+    loadStatisticsForMonthChart() {
+        if(!this.statisticsByYear[this.selectedMonth.year]) {
+            this.loadingStats = true;
+            this.statisticsApi.getStatistics(this.selectedMonth.year)
+                .then(stats => {
+                    this.loadingStats = false;
+                    this.statisticsByYear[this.selectedMonth.year] = stats;
+                    this.createChartForMonth();
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.error = error;
+                    this.loadingStats = false;
+                    this.statisticsByYear[year] = undefined;
+                });
+        } else {
+            this.createChartForMonth();
+        }
+    }
+
+    isCurrentMonthSelected() {
+        let today = new Date();                   
+        var thisMonth = [
+            today.toLocaleString('default', { year: 'numeric' }), 
+            today.toLocaleString('default', { month: '2-digit' })
+        ].join('-');
+        return `${this.selectedMonth.year}-${this.selectedMonth.month}` === thisMonth;
     }
 
 }

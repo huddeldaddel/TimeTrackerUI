@@ -16,13 +16,13 @@
                         </nav>
                     </div>
                     <div class="tile is-child box">                        
-                        <div class="has-text-centered has-text-weight-bold">Month: ${selectedMonth} <spinner if.bind="loadingStats">
+                        <div class="has-text-centered has-text-weight-bold">Month: ${selectedMonth.year}-${selectedMonth.month} <spinner if.bind="loadingStats">
                             </spinner>
                         </div>
                         <canvas id="month"></canvas>
                         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
                             <a class="pagination-previous button" click.trigger="showPreviousMonth()">Previous month</a>
-                            <a class="pagination-next button" click.trigger="showNextMonth()">Next month</a>
+                            <a class="pagination-next button ${canMoveToNextMonth ? '' : 'is-disabled'}" click.trigger="showNextMonth()">Next month</a>
                         </nav>
                     </div>
                 </div>
