@@ -44,7 +44,7 @@
                         <canvas id="year"></canvas>
                         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
                             <a class="pagination-previous button" click.trigger="showPreviousYear()">Previous year</a>
-                            <a class="pagination-next button" click.trigger="showNextYear()">Next year</a>
+                            <a class="pagination-next button ${canMoveToNextYear ? '' : 'is-disabled'}" click.trigger="showNextYear()">Next year</a>
                         </nav>
                     </div>
                 </div>

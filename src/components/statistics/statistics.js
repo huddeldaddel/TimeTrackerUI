@@ -233,7 +233,7 @@ export class Statistics {
     }
 
     showNextMonth() {
-        if(this.isCurrentMonthSelected()) 
+        if(!this.canMoveToNextMonth) 
             return;
 
         if("12" === this.selectedMonth.month) {
@@ -247,12 +247,6 @@ export class Statistics {
             this.selectedMonth.month = (m < 10) ? `0${m}` : `${m}`;
             this.createChartForMonth();
         }
-
-        let today = new Date();                   
-        var thisMonth = [
-            today.toLocaleString('default', { year: 'numeric' }), 
-            today.toLocaleString('default', { month: '2-digit' })
-        ].join('-');
         this.canMoveToNextMonth = !this.isCurrentMonthSelected();
     }
 
@@ -283,6 +277,41 @@ export class Statistics {
             today.toLocaleString('default', { month: '2-digit' })
         ].join('-');
         return `${this.selectedMonth.year}-${this.selectedMonth.month}` === thisMonth;
+    }
+
+    showPreviousYear() {
+        this.selectedYear = this.selectedYear -1;
+        this.loadStatisticsForYearChart();        
+        this.canMoveToNextYear = true;
+    }
+
+    showNextYear() {
+        if(!this.canMoveToNextYear)
+            return;
+
+        this.selectedYear = this.selectedYear +1;
+        this.loadStatisticsForYearChart();        
+        this.canMoveToNextYear = this.selectedYear < new Date().getFullYear();
+    }
+
+    loadStatisticsForYearChart() {
+        if(!this.statisticsByYear[this.selectedYear]) {
+            this.loadingStats = true;
+            this.statisticsApi.getStatistics(this.selectedYear)
+                .then(stats => {
+                    this.loadingStats = false;
+                    this.statisticsByYear[this.selectedYear] = stats;
+                    this.createChartForYear();
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.error = error;
+                    this.loadingStats = false;
+                    this.statisticsByYear[year] = undefined;
+                });
+        } else {
+            this.createChartForYear();
+        }
     }
 
 }
