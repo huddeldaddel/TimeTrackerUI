@@ -2,15 +2,15 @@ import { inject } from 'aurelia-framework';
 import { Chart } from 'chart.js/auto'
 import { LogEntryApi } from '../../services/log-entry-api';
 import { StatisticsApi } from '../../services/statistics-api';
-import { formatDateAsISO8601 } from '../../utils';
+import { calculateCalendarWeek, formatDateAsISO8601 } from '../../utils';
 
 
 @inject(LogEntryApi, StatisticsApi)
 export class Statistics {
 
     colorPaletteTemplate = ['#36a2eb', '#ff6384', '#4bc0c0', '#ff9f40', '#9966ff', '#ffcd56', '#c9cbcf'].reverse();
-    colorPalette = [];    
-    projectColors = {};    
+    colorPalette = [];
+    projectColors = {};
     canMoveToNextWeek = false;
     canMoveToNextMonth = false;
     canMoveToNextYear = false;
@@ -23,6 +23,7 @@ export class Statistics {
         this.loadingToday = false;
         this.selectedDay = formatDateAsISO8601(new Date());
         this.selectedWeek = formatDateAsISO8601(new Date());
+        this.selectedCalendarWeek = calculateCalendarWeek(new Date());
         this.selectedMonth = {
             year: new Date().getFullYear(),
             month: new Date().toLocaleString('default', { month: '2-digit' })
@@ -31,7 +32,7 @@ export class Statistics {
         this.statistics = null;
         this.statisticsByYear = {};
         this.todaysEntries = [];
-        this.charts = { day: null, week: null, month: null, year: null};
+        this.charts = { day: null, week: null, month: null, year: null };
     }
 
     attached() {
@@ -55,19 +56,19 @@ export class Statistics {
     }
 
     detached() {
-        if(null != this.charts.day) {
+        if (null != this.charts.day) {
             this.charts.day.destroy();
             this.charts.day = null;
         }
-        if(null != this.charts.week) {
+        if (null != this.charts.week) {
             this.charts.week.destroy();
             this.charts.week = null;
         }
-        if(null != this.charts.month) {
+        if (null != this.charts.month) {
             this.charts.month.destroy();
             this.charts.month = null;
         }
-        if(null != this.charts.year) {
+        if (null != this.charts.year) {
             this.charts.year.destroy();
             this.charts.year = null;
         }
@@ -96,7 +97,7 @@ export class Statistics {
     }
 
     createChartForYear() {
-        if(null != this.charts.year) {
+        if (null != this.charts.year) {
             this.charts.year.destroy();
             this.charts.year = null;
         }
@@ -106,7 +107,7 @@ export class Statistics {
     }
 
     createChartForMonth() {
-        if(null != this.charts.month) {
+        if (null != this.charts.month) {
             this.charts.month.destroy();
             this.charts.month = null;
         }
@@ -118,18 +119,18 @@ export class Statistics {
     }
 
     createChartForWeek() {
-        if(null != this.charts.week) {
+        if (null != this.charts.week) {
             this.charts.week.destroy();
             this.charts.week = null;
         }
+
         const now = new Date(this.selectedWeek);
         const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
         const dayNum = d.getUTCDay() || 7;
         d.setUTCDate(d.getUTCDate() + 4 - dayNum);
         const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-        const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 
-        const weekContainer = this.statisticsByYear[yearStart.getFullYear()].Weeks[week];
+        const weekContainer = this.statisticsByYear[yearStart.getFullYear()].Weeks[this.selectedCalendarWeek];
         if (weekContainer) {
             const { labels, backgroundColors, minutes } = this.computeChartData(weekContainer.Projects);
             this.charts.week = this.renderChart('week', labels, minutes, backgroundColors);
@@ -137,7 +138,7 @@ export class Statistics {
     }
 
     createChartsForToday() {
-        if(null != this.charts.day) {
+        if (null != this.charts.day) {
             this.charts.day.destroy();
             this.charts.day = null;
         }
@@ -218,12 +219,13 @@ export class Statistics {
 
     showPreviousWeek() {
         let startOfSelectedWeek = new Date(this.selectedWeek);
-        let yearOfSelectedWeek = startOfSelectedWeek.getFullYear();        
+        let yearOfSelectedWeek = startOfSelectedWeek.getFullYear();
         let previousWeek = new Date(startOfSelectedWeek);
-        previousWeek.setDate(startOfSelectedWeek.getDate() -7);        
-        this.selectedWeek = formatDateAsISO8601(previousWeek);        
+        previousWeek.setDate(startOfSelectedWeek.getDate() - 7);
+        this.selectedWeek = formatDateAsISO8601(previousWeek);
+        this.selectedCalendarWeek = calculateCalendarWeek(previousWeek);
 
-        if(previousWeek.getFullYear() !== yearOfSelectedWeek) {
+        if (previousWeek.getFullYear() !== yearOfSelectedWeek) {
             this.loadStatisticsForWeekChart();
         } else {
             this.createChartForWeek();
@@ -232,16 +234,17 @@ export class Statistics {
     }
 
     showNextWeek() {
-        if(!this.canMoveToNextWeek)
+        if (!this.canMoveToNextWeek)
             return;
 
         let startOfSelectedWeek = new Date(this.selectedWeek);
         let yearOfSelectedWeek = startOfSelectedWeek.getFullYear();
         let nextWeek = new Date(startOfSelectedWeek);
-        nextWeek.setDate(startOfSelectedWeek.getDate() +7);        
+        nextWeek.setDate(startOfSelectedWeek.getDate() + 7);
         this.selectedWeek = formatDateAsISO8601(nextWeek);
-        
-        if(nextWeek.getFullYear() !== yearOfSelectedWeek) {
+        this.selectedCalendarWeek = calculateCalendarWeek(nextWeek);
+
+        if (nextWeek.getFullYear() !== yearOfSelectedWeek) {
             this.loadStatisticsForWeekChart();
         } else {
             this.createChartForWeek();
@@ -249,9 +252,9 @@ export class Statistics {
         this.canMoveToNextWeek = !this.isCurrentWeekSelected();
     }
 
-    loadStatisticsForWeekChart() {        
-        let year = new Date(this.selectedWeek).getFullYear();        
-        if(!this.statisticsByYear[year]) {
+    loadStatisticsForWeekChart() {
+        let year = new Date(this.selectedWeek).getFullYear();
+        if (!this.statisticsByYear[year]) {
             this.loadingStats = true;
             this.statisticsApi.getStatistics(year)
                 .then(stats => {
@@ -271,21 +274,18 @@ export class Statistics {
     }
 
     isCurrentWeekSelected() {
-        let today = new Date();
-        let comp = new Date(this.selectedWeek);
-        comp.setDate(today.getDate() + 7);
-        return comp.getTime() > today.getTime();        
+        return calculateCalendarWeek(new Date()) === calculateCalendarWeek(new Date(this.selectedWeek));
     }
 
     showPreviousMonth() {
-        if("01" === this.selectedMonth.month) {
+        if ("01" === this.selectedMonth.month) {
             this.selectedMonth = {
-                year: this.selectedMonth.year -1,
+                year: this.selectedMonth.year - 1,
                 month: "12"
             };
             this.loadStatisticsForMonthChart();
         } else {
-            var m = parseInt(this.selectedMonth.month, 10) -1;
+            var m = parseInt(this.selectedMonth.month, 10) - 1;
             this.selectedMonth.month = (m < 10) ? `0${m}` : `${m}`;
             this.createChartForMonth();
         }
@@ -293,17 +293,17 @@ export class Statistics {
     }
 
     showNextMonth() {
-        if(!this.canMoveToNextMonth) 
+        if (!this.canMoveToNextMonth)
             return;
 
-        if("12" === this.selectedMonth.month) {
+        if ("12" === this.selectedMonth.month) {
             this.selectedMonth = {
-                year: this.selectedMonth.year +1,
+                year: this.selectedMonth.year + 1,
                 month: "01"
             };
             this.loadStatisticsForMonthChart();
         } else {
-            var m = parseInt(this.selectedMonth.month, 10) +1;
+            var m = parseInt(this.selectedMonth.month, 10) + 1;
             this.selectedMonth.month = (m < 10) ? `0${m}` : `${m}`;
             this.createChartForMonth();
         }
@@ -311,7 +311,7 @@ export class Statistics {
     }
 
     loadStatisticsForMonthChart() {
-        if(!this.statisticsByYear[this.selectedMonth.year]) {
+        if (!this.statisticsByYear[this.selectedMonth.year]) {
             this.loadingStats = true;
             this.statisticsApi.getStatistics(this.selectedMonth.year)
                 .then(stats => {
@@ -331,31 +331,31 @@ export class Statistics {
     }
 
     isCurrentMonthSelected() {
-        let today = new Date();                   
+        let today = new Date();
         var thisMonth = [
-            today.toLocaleString('default', { year: 'numeric' }), 
+            today.toLocaleString('default', { year: 'numeric' }),
             today.toLocaleString('default', { month: '2-digit' })
         ].join('-');
         return `${this.selectedMonth.year}-${this.selectedMonth.month}` === thisMonth;
     }
 
     showPreviousYear() {
-        this.selectedYear = this.selectedYear -1;
-        this.loadStatisticsForYearChart();        
+        this.selectedYear = this.selectedYear - 1;
+        this.loadStatisticsForYearChart();
         this.canMoveToNextYear = true;
     }
 
     showNextYear() {
-        if(!this.canMoveToNextYear)
+        if (!this.canMoveToNextYear)
             return;
 
-        this.selectedYear = this.selectedYear +1;
-        this.loadStatisticsForYearChart();        
+        this.selectedYear = this.selectedYear + 1;
+        this.loadStatisticsForYearChart();
         this.canMoveToNextYear = this.selectedYear < new Date().getFullYear();
     }
 
     loadStatisticsForYearChart() {
-        if(!this.statisticsByYear[this.selectedYear]) {
+        if (!this.statisticsByYear[this.selectedYear]) {
             this.loadingStats = true;
             this.statisticsApi.getStatistics(this.selectedYear)
                 .then(stats => {

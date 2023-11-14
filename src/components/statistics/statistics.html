@@ -24,7 +24,7 @@
                 </div>
                 <div class="tile is-6 is-vertical is-parent">
                     <div class="tile is-child box">                        
-                        <div class="has-text-centered has-text-weight-bold">This week <spinner if.bind="loadingStats">
+                        <div class="has-text-centered has-text-weight-bold">Week: ${selectedCalendarWeek}<spinner if.bind="loadingStats">
                             </spinner>
                         </div>
                         <canvas id="week"></canvas>
