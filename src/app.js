@@ -1,17 +1,31 @@
+import { ConfigService } from './services/config-service' 
+
 export class App {  
 
   mobileMenuVisible = false;
 
-  constructor() {
-    this.activeTab = 'log';        
+  constructor() {    
+    if(ConfigService.hasConfig()) {
+      this.activeTab = 'log';
+    } else {
+      this.activeTab = 'settings';
+    }
   } 
 
   showLog() {
-    this.activeTab = 'log';
+    if(ConfigService.hasConfig()) {
+      this.activeTab = 'log';
+    } else {
+      this.activeTab = 'settings';
+    }
   }
 
   showStatistics() {
-    this.activeTab = 'statistics';
+    if(ConfigService.hasConfig()) {
+      this.activeTab = 'statistics';
+    } else {
+      this.activeTab = 'settings';
+    }
   }
 
   showSettings() {

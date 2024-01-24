@@ -1,7 +1,15 @@
 import { Config } from './../model/config';
 
 export class ConfigService {
-  
+
+  /**
+   * Returns whether or not the application has been configured.
+   */
+  static hasConfig() {
+    const json = localStorage.getItem("config");
+    return !!json;      
+  }
+
   /**
    * Loads the configuration. Returns null if the configuration hasn't been stored, yet.
    */
