@@ -42,7 +42,7 @@ export class DailyLog {
         this.loadEntries();
     }
 
-    absenceChanged(newValue) {        
+    absenceChanged(newValue) {
         this.homeoffice = newValue.HomeOffice;
         this.sickleave = newValue.SickLeave;
         this.publicholiday = newValue.PublicHoliday;
@@ -109,13 +109,20 @@ export class DailyLog {
         }
     }
 
+    isAfterBreak(logEntry) {
+        if (this.entries.some((e) => (e.Start < logEntry.Start)) && !this.entries.some((e) => (e.End == logEntry.Start))) {
+            return !this.isOverlapping(logEntry);
+        }
+        return false;
+    }
+
     isOverlapping(logEntry) {
         return this.entries
             .filter((e) => e.Id !== logEntry.Id)
             .some((e) => (e.Start <= logEntry.Start) && (e.End > logEntry.Start));
     }
 
-    toggleHomeOffice(value) {        
+    toggleHomeOffice(value) {
         this.homeoffice = value;
         this.absence.HomeOffice = value;
         this.absenceApi.updateAbsences(this.absence).then(a => {
@@ -123,15 +130,15 @@ export class DailyLog {
         });
     }
 
-    togglePublicHoliday(value) {        
-        this.publicholiday = value;        
+    togglePublicHoliday(value) {
+        this.publicholiday = value;
         this.absence.PublicHoliday = value;
         this.absenceApi.updateAbsences(this.absence).then(a => {
             this.signaler.signal('absences-updated');
         });
     }
 
-    toggleSickLeave(value) {        
+    toggleSickLeave(value) {
         this.sickleave = value;
         this.absence.SickLeave = value;
         this.absenceApi.updateAbsences(this.absence).then(a => {
@@ -139,7 +146,7 @@ export class DailyLog {
         });
     }
 
-    updateVacation(value) {        
+    updateVacation(value) {
         this.vacation = parseInt(value);
         this.absence.Vacation = parseInt(value);
         this.absenceApi.updateAbsences(this.absence).then(a => {

@@ -69,7 +69,8 @@
                 <tbody>
                     <tr as-element="log-entry" repeat.for="entry of entries" date.bind="header" entry.bind="entry"
                         ondelete.bind="deleteHook" onupdate.bind="updateHook"
-                        class="${isOverlapping(entry) ? 'has-background-warning' : '' & signal:'entries-updated'}"></tr>
+                        class="${isAfterBreak(entry) ? 'after-break' : '' & signal:'entries-updated'} ${isOverlapping(entry) ? 'has-background-warning' : '' & signal:'entries-updated'}">
+                    </tr>
                     <tr as-element="log-entry" date.bind="header" onadd.bind="addHook"
                         if.bind="!loading && (null == error)"></tr>
                     <tr if.bind="error != null">
