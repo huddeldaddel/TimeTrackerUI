@@ -1,5 +1,6 @@
 <template>
   <require from="./components/log/log"></require>
+  <require from="./components/search/search"></require>
   <require from="./components/settings/settings"></require>
   <require from="./components/statistics/statistics"></require>
 
@@ -23,6 +24,10 @@
 
         <a class="navbar-item ${activeTab == 'log' ? 'is-active' : ''}" click.trigger="showLog()">
           Log
+        </a>
+
+        <a class="navbar-item ${activeTab == 'search' ? 'is-active' : ''}" click.trigger="showSearch()">
+          Search
         </a>
 
         <a class="navbar-item ${activeTab == 'statistics' ? 'is-active' : ''}" click.trigger="showStatistics()">
