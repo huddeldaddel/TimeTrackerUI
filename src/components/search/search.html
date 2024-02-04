@@ -1,12 +1,43 @@
 <template>
+    <require from="./search.css"></require>
     <section class="section">
-        <div class="container">            
+        <div class="container">
 
             <form submit.trigger="search()">
                 <fieldset>
-                    
+                    <div class="field is-horizontal">
+                        <div class="field mr-2">
+                            <div class="control">
+                                <input class="input year" type="number" placeholder="Year" value.bind="year">
+                            </div>
+                        </div>
+
+                        <div class="field mr-2">
+                            <div class="select">
+                                <select disabled.bind="loading">
+                                    <option repeat.for="project of projects" value.bind="project">${project}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="field query mr-2">
+                            <div class="control">
+                                <input class="input" type="text" placeholder="" disabled.bind="loading">
+                            </div>
+
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary" disabled.bind="loading || (projects.length == 0)">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
             </form>
+
         </div>
     </section>
 </template>
