@@ -39,8 +39,33 @@
                 </fieldset>
             </form>
 
-            
-
+            <nav class="panel" if.bind="results.length > 0">
+                <div class="panel-heading">Results</div>
+                <div class="panel-block">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Begin</th>
+                                <th>End</th>
+                                <th>Duration</th>
+                                <th>Project</th>
+                                <th>Description</th>                                
+                            </tr>
+                        </thead>                        
+                        <tbody>
+                            <tr repeat.for="entry of results">
+                                <td>${entry.Date}</td>
+                                <td>${entry.Start}</td>
+                                <td>${entry.End}</td>
+                                <td>${formatDuration(entry.Duration)}</td>
+                                <td>${entry.Project}</td>
+                                <td>${entry.Description}</td>                                
+                            </tr>                            
+                        </tbody>
+                    </table>
+                </div>
+            </nav>    
         </div>
     </section>
 </template>
