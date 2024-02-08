@@ -1,0 +1,71 @@
+<template>
+    <require from="./search.css"></require>
+    <section class="section">
+        <div class="container">
+
+            <form submit.trigger="search()">
+                <fieldset>
+                    <div class="field is-horizontal">
+                        <div class="field mr-2">
+                            <div class="control">
+                                <input class="input year" type="number" placeholder="Year" value.bind="year">
+                            </div>
+                        </div>
+
+                        <div class="field mr-2">
+                            <div class="select">
+                                <select disabled.bind="loading" value.bind="project">
+                                    <option model.bind="null">Choose...</option>
+                                    <option repeat.for="project of projects" model.bind="project">${project}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="field query mr-2">
+                            <div class="control">
+                                <input class="input" type="text" placeholder="" disabled.bind="loading" value.bind="query">
+                            </div>
+
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary" disabled.bind="loading || (projects.length == 0)">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+            <nav class="panel" if.bind="results.length > 0">
+                <div class="panel-heading">Results</div>
+                <div class="panel-block">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Begin</th>
+                                <th>End</th>
+                                <th>Duration</th>
+                                <th>Project</th>
+                                <th>Description</th>                                
+                            </tr>
+                        </thead>                        
+                        <tbody>
+                            <tr repeat.for="entry of results">
+                                <td>${entry.Date}</td>
+                                <td>${entry.Start}</td>
+                                <td>${entry.End}</td>
+                                <td>${formatDuration(entry.Duration)}</td>
+                                <td>${entry.Project}</td>
+                                <td>${entry.Description}</td>                                
+                            </tr>                            
+                        </tbody>
+                    </table>
+                </div>
+            </nav>    
+        </div>
+    </section>
+</template>

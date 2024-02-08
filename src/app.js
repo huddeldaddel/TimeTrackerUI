@@ -20,6 +20,14 @@ export class App {
     }
   }
 
+  showSearch() {
+    if(ConfigService.hasConfig()) {
+      this.activeTab = 'search';
+    } else {
+      this.activeTab = 'settings';
+    }
+  }
+
   showStatistics() {
     if(ConfigService.hasConfig()) {
       this.activeTab = 'statistics';
