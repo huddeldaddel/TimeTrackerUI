@@ -26,9 +26,7 @@ export class LogEntryApi {
             body: json(entry)
         })
             .then(response => response.json())
-            .then(result => {
-                return result;
-            });
+            .then(result => { return result; });
     }
 
     deleteLogEntry(entry) {
@@ -40,9 +38,7 @@ export class LogEntryApi {
     getLogEntries(date) {
         return this.http.fetch(`/logEntries/${date}`)
             .then(response => response.json())
-            .then(result => {
-                return result;
-            });
+            .then(result => { return result; });
     }
 
     getLogEntriesForToday() {
@@ -55,9 +51,20 @@ export class LogEntryApi {
             body: json(entry)
         })
             .then(response => response.json())
-            .then(result => {
-                return result;
-            });
+            .then(result => { return result; });
+    }
+
+    findLogEntiesForYearAndProject(year, project, query) {
+        return this.http.fetch(`/search`, {
+            method: 'post',
+            body: json({
+                Year: year,
+                Project: project,
+                Query: query
+            })
+        })
+            .then(response => response.json())
+            .then(result => { return result; });
     }
 
 }

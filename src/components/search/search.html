@@ -14,15 +14,16 @@
 
                         <div class="field mr-2">
                             <div class="select">
-                                <select disabled.bind="loading">
-                                    <option repeat.for="project of projects" value.bind="project">${project}</option>
+                                <select disabled.bind="loading" value.bind="project">
+                                    <option model.bind="null">Choose...</option>
+                                    <option repeat.for="project of projects" model.bind="project">${project}</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="field query mr-2">
                             <div class="control">
-                                <input class="input" type="text" placeholder="" disabled.bind="loading">
+                                <input class="input" type="text" placeholder="" disabled.bind="loading" value.bind="query">
                             </div>
 
                         </div>
@@ -37,6 +38,8 @@
                     </div>
                 </fieldset>
             </form>
+
+            
 
         </div>
     </section>
