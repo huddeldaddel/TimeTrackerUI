@@ -45,7 +45,7 @@
     "jest-transform-stub": "^2.0.0",
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^2.9.0",
-    "minimatch": "^9.0.3",
+    "minimatch": "^9.0.5",
     "promise-polyfill": "^8.3.0",
     "regenerator-runtime": "^0.14.1",
     "style-loader": "^4.0.0",
