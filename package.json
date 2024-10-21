@@ -11,7 +11,7 @@
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.4.1",
     "aurelia-fetch-client": "^1.8.2",
-    "chart.js": "^4.4.4"
+    "chart.js": "^4.4.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.8",
